@@ -69,6 +69,31 @@ class WebTest extends PHPUnit_Framework_TestCase
         $this->assertSame(ob_get_clean(), 'index page');
     }
 
+    public function testParameters()
+    {
+        $_SERVER['REQUEST_URI'] = '/hello/nekufa';
+
+        $web = $this->createWeb('/');
+        $web->add('/', 'Common\Controller');
+
+        ob_start();
+        $web->process();
+        $this->assertSame(ob_get_clean(), 'Hello nekufa!');
+    }
+
+    public function testMethodChange()
+    {
+        $_SERVER['REQUEST_METHOD'] = 'POST';
+        $_SERVER['REQUEST_URI'] = '/upload';
+
+        $web = $this->createWeb('/');
+        $web->add('/', 'Common\Controller');
+
+        ob_start();
+        $web->process();
+        $this->assertSame(ob_get_clean(), 'uploading');
+    }
+
     public function testChainProcessing()
     {
         $_SERVER['REQUEST_URI'] = '/a/b/c';
