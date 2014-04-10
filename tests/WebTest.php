@@ -118,7 +118,7 @@ class WebTest extends PHPUnit_Framework_TestCase
 
         ob_start();
         $web->process();
-        $this->assertSame(ob_get_clean(), json_encode(explode(' ', 'a b c')));
+        $this->assertSame(ob_get_clean(), 'Not found');
     }
 
     public function testNoController()
