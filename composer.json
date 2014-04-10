@@ -1,0 +1,23 @@
+{
+    "name": "cti/core",
+    "description": "Application core",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Dmitry.Krokhin",
+            "email": "nekufa@gmail.com"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "Cti\\Core\\" : "src/"
+        }
+    },
+    "require": {
+        "cti/di": "*"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "4.0.*",
+        "satooshi/php-coveralls": "0.7.*@dev"
+    }    
+}
