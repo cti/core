@@ -3,8 +3,6 @@
 namespace Cti\Core;
 
 use Exception;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Session\Session;
 
 /**
  * Web application implementation
@@ -41,6 +39,9 @@ class Web
         }
         if($location[strlen($location)-1] != '/') {
             $location .= '/';
+        }
+        if(isset($this->controllers[$location])) {
+            throw new Exception(sprintf("Duplicate location %s", $location));
         }
         $this->controllers[$location] = $controller;
     }

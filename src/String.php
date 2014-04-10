@@ -10,11 +10,10 @@ class String
 {
     public static function convertToCamelCase($string)
     {
-        if(strstr($string, '_')) {
-            return implode('', array_map('ucfirst', explode('_', $string)));
-        }
-        if(strstr($string, '-')) {
-            return implode('', array_map('ucfirst', explode('-', $string)));
+        foreach(array('_', '-', '.') as $delimiter) {
+            if(strstr($string, $delimiter)) {
+                return implode('', array_map('ucfirst', explode($delimiter, $string)));
+            }
         }
         return ucfirst($string);
     }

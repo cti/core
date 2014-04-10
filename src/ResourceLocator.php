@@ -17,7 +17,7 @@ class ResourceLocator
     {
         $this->locations = array(
             $this->project = $project,
-            $this->base = dirname(dirname(__DIR__))
+            $this->base = dirname(__DIR__)
         );
     }
 
