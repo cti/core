@@ -73,6 +73,13 @@ class WebTest extends PHPUnit_Framework_TestCase
         $this->createWeb('/last-symbol-fail');
     }
 
+    public function testBaseUrlVsRequest()
+    {
+        $_SERVER['REQUEST_URI'] = '/other';
+        $this->setExpectedException('Exception');
+        $this->createWeb('/fail/');
+    }
+
     public function testControllerUrlFail()
     {
         $this->setExpectedException('Exception');

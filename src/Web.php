@@ -40,9 +40,12 @@ class Web
         // validate base
         if ($this->base != '/') {
             if ($this->base[0] != '/') {
-                throw new Exception('base property not begins with /');
+                throw new Exception('Base url not begins with /');
             } elseif ($this->base[strlen($this->base) - 1] != '/') {
-                throw new Exception('base property not ends with /');
+                throw new Exception('Base url not ends with /');
+            }
+            if(strpos($_SERVER['REQUEST_URI'], $this->base) !== 0) {
+                throw new Exception('Base url (%s) is incorrect');
             }
         }
 
