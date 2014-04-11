@@ -1,6 +1,6 @@
 <?php
 
-use Cti\Core\ResourceLocator;
+use Cti\Core\Resource;
 use Cti\Core\String;
 use Cti\Core\View;
 use Cti\Core\Web;
@@ -8,9 +8,9 @@ use Cti\Di\Manager;
 
 class ToolsTests extends PHPUnit_Framework_TestCase
 {
-    function testResourceLocator()
+    function testResource()
     {
-        $l = new ResourceLocator(__DIR__);
+        $l = new Resource(__DIR__);
 
         // file that exists in this project
         $this->assertSame($l->path('ToolsTests.php'), __FILE__);
@@ -20,13 +20,13 @@ class ToolsTests extends PHPUnit_Framework_TestCase
         );
 
         // file that exists in the base
-        $reflection = new ReflectionClass('Cti\Core\ResourceLocator');
-        $this->assertSame($l->path('src ResourceLocator.php'), $reflection->getFileName());
+        $reflection = new ReflectionClass('Cti\Core\Resource');
+        $this->assertSame($l->path('src Resource.php'), $reflection->getFileName());
 
         // project location 
         $this->assertSame(
-            $l->project('src Tools ResourceLocator.php'), 
-            implode(DIRECTORY_SEPARATOR, array(__DIR__, 'src', 'Tools', 'ResourceLocator.php'))
+            $l->project('src Tools Resource.php'), 
+            implode(DIRECTORY_SEPARATOR, array(__DIR__, 'src', 'Tools', 'Resource.php'))
         );
 
         // ignore duplicate spaced 
@@ -43,11 +43,13 @@ class ToolsTests extends PHPUnit_Framework_TestCase
 
         // not exists file - project location
         $this->assertSame($l->path('no-file'), __DIR__ . DIRECTORY_SEPARATOR . 'no-file');
+
+        $this->assertSame($l->listFiles("src php Bootstrap")->count(), 1);
     }
 
     function testView()
     {
-        $view = new View(new ResourceLocator(__DIR__));
+        $view = new View(new Resource(__DIR__));
         ob_start();
         $view->show('test');
         $this->assertSame($view->render('test'), ob_get_clean());

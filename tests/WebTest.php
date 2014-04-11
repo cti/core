@@ -29,12 +29,12 @@ class WebTest extends PHPUnit_Framework_TestCase
         $web = $manager->create('Cti\Core\Web', array(
             'base' => '/',
             'controllers' => array(
-                'Common\Controller'
+                'Controller\DefaultController'
             )
         ));
 
         ob_start();
-        $web->process();
+        $web->run();
 
         $this->assertSame(ob_get_clean(), 'index page');
     }
@@ -50,13 +50,13 @@ class WebTest extends PHPUnit_Framework_TestCase
         $web = $manager->create('Cti\Core\Web', array(
             'base' => '/',
             'controllers' => array(
-                'Common\Controller',
-                'Common\OtherController'
+                'Controller\DefaultController',
+                'Controller\OtherController'
             )
         ));
 
         ob_start();
-        $web->process();
+        $web->run();
 
         $this->assertSame(ob_get_clean(), 'other page');
     }
@@ -106,10 +106,10 @@ class WebTest extends PHPUnit_Framework_TestCase
         $_SERVER['REQUEST_URI'] = '/';
 
         $web = $this->createWeb('/');
-        $web->add('/', 'Common\Controller');
+        $web->add('/', 'Controller\DefaultController');
 
         ob_start();
-        $web->process();
+        $web->run();
         $this->assertSame(ob_get_clean(), 'index page');
     }
 
@@ -118,10 +118,10 @@ class WebTest extends PHPUnit_Framework_TestCase
         $_SERVER['REQUEST_URI'] = '/hello/nekufa';
 
         $web = $this->createWeb('/');
-        $web->add('/', 'Common\Controller');
+        $web->add('/', 'Controller\DefaultController');
 
         ob_start();
-        $web->process();
+        $web->run();
         $this->assertSame(ob_get_clean(), 'Hello nekufa!');
     }
 
@@ -131,10 +131,10 @@ class WebTest extends PHPUnit_Framework_TestCase
         $_SERVER['REQUEST_URI'] = '/upload';
 
         $web = $this->createWeb('/');
-        $web->add('/', 'Common\Controller');
+        $web->add('/', 'Controller\DefaultController');
 
         ob_start();
-        $web->process();
+        $web->run();
         $this->assertSame(ob_get_clean(), 'uploading');
     }
 
@@ -143,10 +143,10 @@ class WebTest extends PHPUnit_Framework_TestCase
         $_SERVER['REQUEST_URI'] = '/a/b/c';
 
         $web = $this->createWeb('/');
-        $web->add('/', 'Common\Controller');
+        $web->add('/', 'Controller\DefaultController');
 
         ob_start();
-        $web->process();
+        $web->run();
         $this->assertSame(ob_get_clean(), json_encode(explode(' ', 'a b c')));
     }
 
@@ -158,10 +158,10 @@ class WebTest extends PHPUnit_Framework_TestCase
         $_SERVER['REQUEST_URI'] = '/t/';
 
         $web = $this->createWeb('/t/');
-        $web->add('/', 'Common\ExceptionHandlingController');
+        $web->add('/', 'Controller\ExceptionHandlingController');
 
         ob_start();
-        $web->process();
+        $web->run();
         $this->assertSame(ob_get_clean(), 'Not found');
     }
 
@@ -175,7 +175,7 @@ class WebTest extends PHPUnit_Framework_TestCase
         $web = $this->createWeb('/t/');
 
         $this->setExpectedException('Exception');
-        $web->process();
+        $web->run();
     }
 
     public function testNotFound()
@@ -189,6 +189,6 @@ class WebTest extends PHPUnit_Framework_TestCase
         $web->add('/', __CLASS__);
 
         $this->setExpectedException('Exception');
-        $web->process();
+        $web->run();
     }
 }

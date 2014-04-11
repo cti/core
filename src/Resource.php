@@ -2,11 +2,13 @@
 
 namespace Cti\Core;
 
+use Symfony\Component\Finder\Finder;
+
 /**
- * File locator
+ * Resource locator
  * @package Cti\Core
  */
-class ResourceLocator
+class Resource
 {
     protected $locations;
 
@@ -51,5 +53,11 @@ class ResourceLocator
     {
         $path = implode(DIRECTORY_SEPARATOR, $this->parseArgs(func_get_args()));
         return $this->base . DIRECTORY_SEPARATOR . $path;
+    }
+
+    public function listFiles($location)
+    {
+        $finder = new Finder();
+        return $finder->files()->name('*.php')->in($this->path($location));
     }
 }

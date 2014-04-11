@@ -1,8 +1,8 @@
 <?php
 
-namespace Common;
+namespace Controller;
 
-class Controller
+class DefaultController
 {
 
     function get()

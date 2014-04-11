@@ -13,16 +13,16 @@ use OutOfRangeException;
 class View
 {
     /**
-     * @var Cti\Core\ResourceLocator 
+     * @var Cti\Core\Resource 
      */
-    protected $locator;
+    protected $resource;
 
     /**
-     * @param Cti\Core\ResourceLocator $locator 
+     * @param Cti\Core\Resource $resource 
      */
-    public function __construct(ResourceLocator $locator)
+    public function __construct(Resource $resource)
     {
-        $this->locator = $locator;
+        $this->resource = $resource;
     }
 
     /**
@@ -36,7 +36,7 @@ class View
         try {
             extract($data);
             ob_start();
-            include $this->locator->path('resources php view '.func_get_arg(0).'.php');
+            include $this->resource->path('resources php view '.func_get_arg(0).'.php');
             return ob_get_clean();
         } catch(Exception $e) {
             return $e->getMessage();

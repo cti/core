@@ -89,7 +89,7 @@ class Web
         $this->controllers[$location] = $controller;
     }
 
-    public function process()
+    public function run()
     {
         $mount = array();
         foreach($this->controllers as $path => $controllerName) {

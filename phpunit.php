@@ -1,4 +1,6 @@
 <?php
 
 $loader = include __DIR__.'/vendor/autoload.php';
-$loader->add("Common", __DIR__.'/tests/Common');
+$loader->add("Bootstrap", __DIR__.'/tests/src/php/Bootstrap');
+$loader->add("Command", __DIR__.'/tests/src/php/Command');
+$loader->add("Controller", __DIR__.'/tests/src/php/Controller');

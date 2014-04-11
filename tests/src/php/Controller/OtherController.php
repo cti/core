@@ -1,6 +1,6 @@
 <?php
 
-namespace Common;
+namespace Controller;
 
 class OtherController
 {
