@@ -25,6 +25,7 @@ class WebTest extends PHPUnit_Framework_TestCase
         $_SERVER['REQUEST_URI'] = '/';
 
         $manager = new Manager;
+        $manager->setConfigureAllProperties(true);
         $web = $manager->create('Cti\Core\Web', array(
             'base' => '/',
             'controllers' => array(
@@ -45,6 +46,7 @@ class WebTest extends PHPUnit_Framework_TestCase
         $_SERVER['REQUEST_URI'] = '/other';
 
         $manager = new Manager;
+        $manager->setConfigureAllProperties(true);        
         $web = $manager->create('Cti\Core\Web', array(
             'base' => '/',
             'controllers' => array(
