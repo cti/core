@@ -19,6 +19,7 @@ class Application
 
         // register application service
         $locator->register('application', get_called_class());
+        $locator->register('resource', 'Cti\Core\Resource');
 
         return $locator->getApplication();
     }
