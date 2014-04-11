@@ -4,6 +4,8 @@ namespace Cti\Core;
 
 use Exception;
 
+use Cti\Di\Reflection;
+
 /**
  * Web application implementation
  * @package Cti\Core
@@ -58,7 +60,7 @@ class Web
         $this->controllers = array();
         foreach ($controllers as $path => $controller) {
             if(is_numeric($path)) {
-                $class = basename($controller);
+                $class = Reflection::getReflectionClass($controller)->getShortName();
                 if(substr($class, -10) == 'Controller') {
                     $class = substr($class,0, -10);
                     $slug = String::camelCaseToUnderScore($class);
