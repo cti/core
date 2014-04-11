@@ -17,6 +17,48 @@ class WebTest extends PHPUnit_Framework_TestCase
             'base' => $base
         ));
     }
+
+    public function testControllerMount()
+    {
+        // defaults
+        $_SERVER['REQUEST_METHOD'] = 'GET';
+        $_SERVER['REQUEST_URI'] = '/';
+
+        $manager = new Manager;
+        $web = $manager->create('Cti\Core\Web', array(
+            'base' => '/',
+            'controllers' => array(
+                'Common\Controller'
+            )
+        ));
+
+        ob_start();
+        $web->process();
+
+        $this->assertSame(ob_get_clean(), 'index page');
+    }
+
+    public function testNamedControllerMount()
+    {
+        // defaults
+        $_SERVER['REQUEST_METHOD'] = 'GET';
+        $_SERVER['REQUEST_URI'] = '/other';
+
+        $manager = new Manager;
+        $web = $manager->create('Cti\Core\Web', array(
+            'base' => '/',
+            'controllers' => array(
+                'Common\Controller',
+                'Common\OtherController'
+            )
+        ));
+
+        ob_start();
+        $web->process();
+
+        $this->assertSame(ob_get_clean(), 'other page');
+    }
+
     public function testBaseUrlStartFail()
     {
         $this->setExpectedException('Exception');

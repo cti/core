@@ -32,19 +32,6 @@ class Web
      */
     protected $controllers = array();
 
-    public function add($location, $controller)
-    {
-        if($location[0] != '/') {
-            throw new Exception(sprintf("Incorrect location (%s) must starts with /", $location));
-        }
-        if($location[strlen($location)-1] != '/') {
-            $location .= '/';
-        }
-        if(isset($this->controllers[$location])) {
-            throw new Exception(sprintf("Duplicate location %s", $location));
-        }
-        $this->controllers[$location] = $controller;
-    }
 
     public function init()
     {
@@ -65,6 +52,39 @@ class Web
         if($this->location[strlen($this->location)-1] != '/') {
             $this->location .= '/';
         }
+
+        // process controllers
+        $controllers = $this->controllers;
+        $this->controllers = array();
+        foreach ($controllers as $path => $controller) {
+            if(is_numeric($path)) {
+                $class = basename($controller);
+                if(substr($class, -10) == 'Controller') {
+                    $class = substr($class,0, -10);
+                    $slug = String::camelCaseToUnderScore($class);
+                    if($slug == 'default' || !$slug) {
+                        $path = '/';
+                    } else {
+                        $path = '/' . $slug .'/';
+                    }
+                }
+            }
+            $this->add($path, $controller);
+        }
+    }
+
+    public function add($location, $controller)
+    {
+        if($location[0] != '/') {
+            throw new Exception(sprintf("Incorrect location (%s) must starts with /", $location));
+        }
+        if($location[strlen($location)-1] != '/') {
+            $location .= '/';
+        }
+        if(isset($this->controllers[$location])) {
+            throw new Exception(sprintf("Duplicate location %s", $location));
+        }
+        $this->controllers[$location] = $controller;
     }
 
     public function process()
