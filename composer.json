@@ -14,6 +14,7 @@
         }
     },
     "require": {
+        "symfony/finder": "*",
         "cti/di": ">=2.2.3"
     },
     "require-dev": {
