@@ -1,6 +1,6 @@
 <?php
 
-namespace Bootstrap;
+namespace Extension;
 
 class Nothing
 {

@@ -44,7 +44,7 @@ class ToolsTests extends PHPUnit_Framework_TestCase
         // not exists file - project location
         $this->assertSame($l->path('no-file'), __DIR__ . DIRECTORY_SEPARATOR . 'no-file');
 
-        $this->assertSame($l->listFiles("src php Bootstrap")->count(), 1);
+        $this->assertSame($l->listFiles("src php Extension")->count(), 1);
     }
 
     function testView()

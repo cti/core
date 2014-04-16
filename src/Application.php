@@ -30,28 +30,26 @@ class Application
      */
     protected $locator;
 
-    /**
-     * @inject
-     * @var Cti\Core\Resource
-     */
-    protected $resource;
+    protected $extensions = array(
+        'Cti\Core\Extension\WebExtension',
+        'Cti\Core\Extension\ConsoleExtension',
+    );
 
     /**
-     * call all bootstrap methods
-     * process all bootstrap classes
+     * call all extension methods
+     * process all extension classes
      */
     function init()
     {
-        // process local bootstrap methods
-        foreach(Reflection::getReflectionClass(get_class($this))->getMethods() as $method) {
-            if(strpos($method->getName(), 'init') === 0 && strlen($method->getName())> 4) {
-                $this->getManager()->call($this, $method->getName());
-            }
-        }
+        // get current manager
+        $manager = $this->locator->getManager();
 
-        // process application bootstrap classes
-        $classes = $this->listClasses('Bootstrap');
-        array_walk($classes, array($this->getManager(), 'get'));
+        // process default extensions
+        array_walk($this->extensions, array($manager, 'get'));
+
+        // process application extension classes
+        $extensions = $this->listClasses('Extension');
+        array_walk($extensions, array($manager, 'get'));
     }
 
     /**
@@ -60,69 +58,14 @@ class Application
     public function listClasses($namespace)
     {
         $classes = array();
-        foreach($this->getResource()->listFiles("src php ".$namespace) as $file) {
+        foreach($this->getLocator()->getResource()->listFiles("src php ".$namespace) as $file) {
             $classes[] = $namespace . '\\' . $file->getBasename('.php');
         }
         return $classes;
     }
 
-    /**
-     * init console service
-     */
-    public function initConsole()
-    {
-        $bootstrap = $this;
-        $this->getLocator()->register('console', function($locator) use ($bootstrap) {
-
-            // create application 
-            $console = $locator->getManager()->get('Symfony\Component\Console\Application');            
-
-            // add application commands
-            foreach($bootstrap->listClasses('Command') as $class) {
-                $console->add($locator->getManager()->get($class));
-            }
-
-            return $console;
-        });
-    }
-
-    /**
-     * init web service
-     */
-    public function initWeb()
-    {
-        $bootstrap = $this;
-        $this->locator->register('web', function($locator) use ($bootstrap) {
-
-            $locator->getManager()->getConfiguration()->set(
-                'Cti\Core\Web', 'controllers', $bootstrap->listClasses('Controller')
-            );
-
-            return $locator->getManager()->create('Cti\Core\Web');
-        });        
-    }
-
-    /**
-     * @return Cti\Di\Locator
-     */
     public function getLocator()
     {
         return $this->locator;
-    }
-
-    /**
-     * @return Cti\Di\Manager
-     */
-    public function getManager()
-    {
-        return $this->getLocator()->getManager();
-    }
-
-    /**
-     * @return Cti\Core\Resource
-     */
-    public function getResource()
-    {
-        return $this->resource;
     }
 }
