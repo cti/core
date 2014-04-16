@@ -3,7 +3,6 @@
 namespace Cti\Core;
 
 use Cti\Di\Locator;
-use Cti\Di\Manager;
 
 class Application extends Locator
 {
