@@ -55,14 +55,15 @@ class Application
     /**
      * inject application extension
      * @param string $extension
-     * @return mixed
+     * @return Cti\Core\Application
      */
     function inject($extension)
     {
         if(!in_array($extension, $this->extensions)) {
             array_push($this->extensions, $extension);
         }
-        return $this->locator->getManager()->get($extension);
+        $this->locator->getManager()->get($extension);
+        return $this;
     }
 
     /**
