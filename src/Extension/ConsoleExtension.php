@@ -15,7 +15,7 @@ class ConsoleExtension
             $console = $locator->getManager()->get('Symfony\Component\Console\Application');            
 
             // add application commands
-            foreach($application->listClasses('Command') as $class) {
+            foreach($application->getClasses('Command') as $class) {
                 $console->add($locator->getManager()->get($class));
             }
             return $console;

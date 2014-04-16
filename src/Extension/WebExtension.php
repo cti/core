@@ -13,7 +13,7 @@ class WebExtension
 
             $configuration = $locator->getManager()->getConfiguration();
 
-            foreach ($application->listClasses('Controller') as $controller) {
+            foreach ($application->getClasses('Controller') as $controller) {
                 $configuration->push('Cti\Core\Web', 'controllers', $controller);
             }
 

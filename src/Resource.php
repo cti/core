@@ -57,7 +57,11 @@ class Resource
 
     public function listFiles($location)
     {
+        $path = $this->path($location);
+        if(!is_dir($path)) {
+            return array();
+        }
         $finder = new Finder();
-        return $finder->files()->name('*.php')->in($this->path($location));
+        return $finder->files()->name('*.php')->in($path);
     }
 }

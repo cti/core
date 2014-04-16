@@ -21,5 +21,18 @@ class ApplicationTest extends PHPUnit_Framework_TestCase
         
         $this->assertInstanceOf('Symfony\Component\Console\Application', $locator->getConsole());
     }
+
+    function testEmpty()
+    {
+        $_SERVER['REQUEST_METHOD'] = 'GET';
+        $_SERVER['REQUEST_URI'] = '/';
+        $config = array(
+            'Cti\Core\Resource' => array(dirname(__DIR__))
+        );
+
+        $locator = Application::create($config)->getLocator();
+        $locator->getWeb();
+        $locator->getConsole();
+    }
     
 }

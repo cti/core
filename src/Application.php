@@ -45,27 +45,30 @@ class Application
         $manager = $this->locator->getManager();
 
         // process default extensions
-        array_walk($this->extensions, array($this, 'append'));
+        array_walk($this->extensions, array($this, 'inject'));
 
         // process application extension classes
-        $extensions = $this->listClasses('Extension');
-        array_walk($extensions, array($this, 'append'));
+        $extensions = $this->getClasses('Extension');
+        array_walk($extensions, array($this, 'inject'));
     }
 
     /**
-     * append application extension
+     * inject application extension
      * @param string $extension
      * @return mixed
      */
-    function append($extension)
+    function inject($extension)
     {
+        if(!in_array($extension, $this->extensions)) {
+            array_push($this->extensions, $extension);
+        }
         return $this->locator->getManager()->get($extension);
     }
 
     /**
      * get class list
      */
-    public function listClasses($namespace)
+    public function getClasses($namespace)
     {
         $classes = array();
         foreach($this->getLocator()->getResource()->listFiles("src php ".$namespace) as $file) {
