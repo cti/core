@@ -13,13 +13,13 @@ class ApplicationTest extends PHPUnit_Framework_TestCase
             'Cti\Core\Resource' => array(__DIR__)
         );
 
-        $locator = Application::create($config)->getLocator();
+        $application = Application::create($config);
 
         ob_start();
-        $locator->getWeb()->run();
+        $application->getWeb()->run();
         $this->assertSame(ob_get_clean(), 'index page');
         
-        $this->assertInstanceOf('Symfony\Component\Console\Application', $locator->getConsole());
+        $this->assertInstanceOf('Symfony\Component\Console\Application', $application->getConsole());
     }
 
     function testEmpty()
@@ -30,9 +30,9 @@ class ApplicationTest extends PHPUnit_Framework_TestCase
             'Cti\Core\Resource' => array(dirname(__DIR__))
         );
 
-        $locator = Application::create($config)->getLocator();
-        $locator->getWeb();
-        $locator->getConsole();
+        $application = Application::create($config);
+        $application->getWeb();
+        $application->getConsole();
     }
     
 }

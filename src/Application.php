@@ -4,24 +4,26 @@ namespace Cti\Core;
 
 use Cti\Di\Locator;
 use Cti\Di\Manager;
-use Cti\Di\Reflection;
 
-class Application
+class Application extends Locator
 {
 
     public static function create($config)
     {
+        $class = get_called_class();
+
         // create di
-        $locator = new Locator;
+        $application = new $class();
 
         // load configuration
-        $locator->getManager()->getConfiguration()->load($config);
+        $application->getManager()->getConfiguration()->load($config);
 
         // register application service
-        $locator->register('application', get_called_class());
-        $locator->register('resource', 'Cti\Core\Resource');
+        $application->register('resource', 'Cti\Core\Resource');
 
-        return $locator->getApplication();
+        $application->init();
+
+        return $application;
     }
 
     /**
@@ -42,7 +44,7 @@ class Application
     function init()
     {
         // get current manager
-        $manager = $this->locator->getManager();
+        $manager = $this->getManager();
 
         // process default extensions
         array_walk($this->extensions, array($this, 'inject'));
@@ -62,7 +64,7 @@ class Application
         if(!in_array($extension, $this->extensions)) {
             array_push($this->extensions, $extension);
         }
-        $this->locator->getManager()->get($extension);
+        $this->getManager()->get($extension);
         return $this;
     }
 
@@ -80,6 +82,6 @@ class Application
 
     public function getLocator()
     {
-        return $this->locator;
+        return $this;
     }
 }
