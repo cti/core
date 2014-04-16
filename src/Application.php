@@ -3,6 +3,7 @@
 namespace Cti\Core;
 
 use Cti\Di\Locator;
+use Cti\Di\Manager;
 
 class Application extends Locator
 {
@@ -21,7 +22,7 @@ class Application extends Locator
         $application->register('resource', 'Cti\Core\Resource');
         
         // init
-        $application->init();
+        $application->init($application->getManager());
 
         return $application;
     }
@@ -35,11 +36,8 @@ class Application extends Locator
      * call all extension methods
      * process all extension classes
      */
-    function init()
+    function init(Manager $manager)
     {
-        // get current manager
-        $manager = $this->getManager();
-
         // process default extensions
         array_walk($this->extensions, array($this, 'extend'));
 
