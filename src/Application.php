@@ -20,17 +20,12 @@ class Application extends Locator
 
         // register application service
         $application->register('resource', 'Cti\Core\Resource');
-
+        
+        // init
         $application->init();
 
         return $application;
     }
-
-    /**
-     * @inject
-     * @var Cti\Di\Locator
-     */
-    protected $locator;
 
     protected $extensions = array(
         'Cti\Core\Extension\ConsoleExtension',
@@ -74,14 +69,9 @@ class Application extends Locator
     public function getClasses($namespace)
     {
         $classes = array();
-        foreach($this->getLocator()->getResource()->listFiles("src php ".$namespace) as $file) {
+        foreach($this->getResource()->listFiles("src php ".$namespace) as $file) {
             $classes[] = $namespace . '\\' . $file->getBasename('.php');
         }
         return $classes;
-    }
-
-    public function getLocator()
-    {
-        return $this;
     }
 }
