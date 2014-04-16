@@ -41,19 +41,19 @@ class Application extends Locator
         $manager = $this->getManager();
 
         // process default extensions
-        array_walk($this->extensions, array($this, 'inject'));
+        array_walk($this->extensions, array($this, 'extend'));
 
         // process application extension classes
         $extensions = $this->getClasses('Extension');
-        array_walk($extensions, array($this, 'inject'));
+        array_walk($extensions, array($this, 'extend'));
     }
 
     /**
-     * inject application extension
+     * extend application with extension
      * @param string $extension
      * @return Cti\Core\Application
      */
-    function inject($extension)
+    function extend($extension)
     {
         if(!in_array($extension, $this->extensions)) {
             array_push($this->extensions, $extension);
