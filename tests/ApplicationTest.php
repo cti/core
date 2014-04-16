@@ -18,7 +18,7 @@ class ApplicationTest extends PHPUnit_Framework_TestCase
         ob_start();
         $locator->getWeb()->run();
         $this->assertSame(ob_get_clean(), 'index page');
-
+        
         $this->assertInstanceOf('Symfony\Component\Console\Application', $locator->getConsole());
     }
     

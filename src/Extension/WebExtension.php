@@ -13,13 +13,11 @@ class WebExtension
 
             $configuration = $locator->getManager()->getConfiguration();
 
-            $controllers = $configuration->get('Cti\Core\Web', 'controllers', array());
             foreach ($application->listClasses('Controller') as $controller) {
-                $controllers[] = $controller;
+                $configuration->push('Cti\Core\Web', 'controllers', $controller);
             }
-            $controllers = $configuration->set('Cti\Core\Web', 'controllers', $controllers);
 
             return $locator->getManager()->create('Cti\Core\Web');
-        });        
+        });
     }
 }

@@ -31,8 +31,8 @@ class Application
     protected $locator;
 
     protected $extensions = array(
-        'Cti\Core\Extension\WebExtension',
         'Cti\Core\Extension\ConsoleExtension',
+        'Cti\Core\Extension\WebExtension',
     );
 
     /**
@@ -45,11 +45,21 @@ class Application
         $manager = $this->locator->getManager();
 
         // process default extensions
-        array_walk($this->extensions, array($manager, 'get'));
+        array_walk($this->extensions, array($this, 'append'));
 
         // process application extension classes
         $extensions = $this->listClasses('Extension');
-        array_walk($extensions, array($manager, 'get'));
+        array_walk($extensions, array($this, 'append'));
+    }
+
+    /**
+     * append application extension
+     * @param string $extension
+     * @return mixed
+     */
+    function append($extension)
+    {
+        return $this->locator->getManager()->get($extension);
     }
 
     /**
