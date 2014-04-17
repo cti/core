@@ -10,11 +10,13 @@ class ApplicationTest extends PHPUnit_Framework_TestCase
         $_SERVER['REQUEST_METHOD'] = 'GET';
         $_SERVER['REQUEST_URI'] = '/';
         $config = array(
-            'Cti\Core\Resource' => array(__DIR__)
+            'Cti\Core\Application' => array(
+                'path' => __DIR__
+            ),
         );
 
         $application = Application::create($config);
-
+        
         ob_start();
         $application->getWeb()->run();
         $this->assertSame(ob_get_clean(), 'index page');
@@ -27,7 +29,9 @@ class ApplicationTest extends PHPUnit_Framework_TestCase
         $_SERVER['REQUEST_METHOD'] = 'GET';
         $_SERVER['REQUEST_URI'] = '/';
         $config = array(
-            'Cti\Core\Resource' => array(dirname(__DIR__))
+            'Cti\Core\Application' => array( 
+                'path' => dirname(__DIR__)
+            )
         );
 
         $application = Application::create($config);

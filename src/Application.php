@@ -2,29 +2,39 @@
 
 namespace Cti\Core;
 
+use Cti\Di\Configuration;
 use Cti\Di\Locator;
 use Cti\Di\Manager;
 
+use Symfony\Component\Finder\Finder;
+
 class Application extends Locator
 {
+    protected $path;
 
     public static function create($config)
     {
         $class = get_called_class();
 
-        // create di
-        $application = new $class();
+        if(is_string($config)) {
+            $path = dirname(dirname(dirname($config)));
+        } elseif(is_array($config) && isset($config[$class]) && isset($config[$class]['path'])) {
+            $path = $config[$class]['path'];
+        } else {
+            throw new \Exception("Application creation fail");
+        }
 
-        // load configuration
-        $application->getManager()->getConfiguration()->load($config);
+        $configuration = new Configuration(array(
+            $class => array(
+                'path' => $path
+            ),
+            'Cti\Di\Locator' => $class
+        ));
+        $configuration->load($config);
 
-        // register application service
-        $application->register('resource', 'Cti\Core\Resource');
-        
-        // init
-        $application->init($application->getManager());
+        $manager = new Manager($configuration);
 
-        return $application;
+        return $manager->get('Cti\Di\Locator');
     }
 
     protected $extensions = array(
@@ -62,13 +72,40 @@ class Application extends Locator
 
     /**
      * get class list
+     * @param string $namespace
+     * @return array
      */
     public function getClasses($namespace)
     {
         $classes = array();
-        foreach($this->getResource()->listFiles("src php ".$namespace) as $file) {
-            $classes[] = $namespace . '\\' . $file->getBasename('.php');
+        $path = $this->getPath("src php $namespace");
+
+        if(is_dir($path)) {
+            $finder = new Finder();
+            foreach($finder->files()->name('*.php')->in($path) as $file) {
+                $classes[] = $namespace . '\\' . $file->getBasename('.php');
+            }            
         }
+
         return $classes;
+    }
+
+    /**
+     * get application path
+     * @param string $string
+     * @return string
+     */
+    public function getPath($string)
+    {
+        $args = func_get_args();
+        if(count($args) == 1) {
+            $args = explode(' ', $args[0]);
+        }
+
+        $args = array_filter($args, 'strlen');
+        array_unshift($args, $this->path);
+
+        return implode(DIRECTORY_SEPARATOR, $args);
+
     }
 }
