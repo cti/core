@@ -114,12 +114,7 @@ class Web
             throw new Exception(sprintf("No controller can process url: %s", $this->location));
         }
 
-        foreach ($chain as $k => $v) {
-            if ($v === '') {
-                unset($chain[$k]);
-            }
-        }
-        $chain = array_values($chain);
+        $chain = array_values(array_filter($chain, 'strlen'));
 
         try {
 
