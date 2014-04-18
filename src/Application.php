@@ -34,7 +34,9 @@ class Application extends Locator
 
         $manager = new Manager($configuration);
 
-        return $manager->get('Cti\Di\Locator');
+        $instance = $manager->get($class);
+        $manager->register($instance, 'Cti\Di\Locator');
+        return $instance;
     }
 
     protected $extensions = array(
@@ -48,6 +50,8 @@ class Application extends Locator
      */
     function init(Manager $manager)
     {
+        parent::init($manager);
+        
         // process default extensions
         array_walk($this->extensions, array($this, 'extend'));
 

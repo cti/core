@@ -4,6 +4,19 @@ use Cti\Core\Application;
 
 class ApplicationTest extends PHPUnit_Framework_TestCase
 {
+    function testLocalConfig()
+    {
+        $config = implode(DIRECTORY_SEPARATOR, array(__DIR__, 'resources', 'php', 'config.php'));
+        $app = Application::create($config);
+
+        $configuration = $app->getManager()->getConfiguration();
+
+        // configuration loaded
+        $this->assertSame($configuration->get('class', 'property'), 'value');
+
+        // local override
+        $this->assertSame($configuration->get('class', 'property2'), 'new_value');
+    }
 
     function testBasics()
     {
