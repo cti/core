@@ -2,8 +2,6 @@
 
 namespace Cti\Core;
 
-use Exception;
-
 use Cti\Di\Reflection;
 
 /**

@@ -21,7 +21,7 @@ class Application extends Locator
         } elseif(is_array($config) && isset($config[$class]) && isset($config[$class]['path'])) {
             $path = $config[$class]['path'];
         } else {
-            throw new \Exception("Application creation fail");
+            throw new Exception("Application creation fail");
         }
 
         $configuration = new Configuration(array(
