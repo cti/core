@@ -34,7 +34,7 @@ class View
             ob_start();
             include $this->application->getPath('resources php view '.func_get_arg(0).'.php');
             return ob_get_clean();
-        } catch(Exception $e) {
+        } catch(\Exception $e) {
             return $e->getMessage();
         }
     }

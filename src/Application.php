@@ -13,6 +13,11 @@ class Application extends Locator
 {
     protected $path;
 
+    /**
+     * @param $config
+     * @return Application
+     * @throws Exception
+     */
     public static function create($config)
     {
         $class = get_called_class();

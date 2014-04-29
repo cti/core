@@ -8,7 +8,7 @@ class Barista
 {
     /**
      * @inject
-     * @var Cti\Core\Application
+     * @var Application
      */
     protected $application;
 
@@ -112,14 +112,6 @@ class Barista
             $this->getCreate($text),
             $this->getExtend($text)
         );
-
-        $dependencies = array();
-        $dependencies = array_merge($dependencies, $this->getRequires($text));
-        $dependencies = array_merge($dependencies, $this->getMixins($text));
-        $dependencies = array_merge($dependencies, $this->getCreate($text));
-        $dependencies = array_merge($dependencies, $this->getExtend($text));
-
-        return $dependencies;
     }
 
     protected function getRequires($text)

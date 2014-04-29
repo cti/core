@@ -10,6 +10,9 @@ before_script:
   - composer selfupdate
   - echo -e "Host github.com\n\tStrictHostKeyChecking no\n" >> ~/.ssh/config
   - composer install --dev --no-interaction
+  - sudo apt-get install npm
+  - sudo npm cache clean
+  - sudo npm install -g coffee-script --registry http://registry.npmjs.org
 
 script:
   - php vendor/bin/phpunit -c phpunit.xml.dist

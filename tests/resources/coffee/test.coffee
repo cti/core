@@ -1,0 +1,1 @@
+Ext.onReady -> Ext.create 'Core.Viewport'

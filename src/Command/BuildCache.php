@@ -41,7 +41,13 @@ class BuildCache extends Command
         $buildSource = $this->application->getPath('build php');
         $source = $this->application->getPath('src php');
 
-        $finder->in(array($buildSource, $coreSource, $source))->files();
+        $path = array($coreSource, $source);
+
+        if(is_dir($buildSource)) {
+            $path[] = $buildSource;
+        }
+
+        $finder->in($path)->files();
 
         $inspector = $this->application->getManager()->getInspector();
 
@@ -56,15 +62,9 @@ class BuildCache extends Command
             } elseif(strpos($path, $source) === 0) {
                 $namespace = substr($path, strlen($source) + 1);
 
-            } else {
-                throw new \Exception(sprintf('Namespace for %s not defined', $path));
             }
 
-            $class = $namespace . '\\' . $file->getBasename('.php');
-
-            if(!class_exists($class)) {
-                include $path . DIRECTORY_SEPARATOR . $file->getFilename();
-            }
+            $class = str_replace(DIRECTORY_SEPARATOR, '\\', $namespace) . '\\' . $file->getBasename('.php');
 
             $inspector->getPublicMethods($class);
             $inspector->getClassInjection($class);
