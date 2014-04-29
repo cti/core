@@ -2,6 +2,7 @@
 
 namespace Cti\Core;
 
+use Cti\Di\Cache;
 use Cti\Di\Configuration;
 use Cti\Di\Locator;
 use Cti\Di\Manager;
@@ -34,6 +35,12 @@ class Application extends Locator
 
         $manager = new Manager($configuration);
 
+        $datafile = implode(DIRECTORY_SEPARATOR, array($path, 'build', 'php', 'cache.php'));
+
+        if(file_exists($datafile)) {
+            $manager->get('Cti\Di\Cache')->setData(include $datafile);
+        }
+
         $instance = $manager->get($class);
         $manager->register($instance, 'Cti\Di\Locator');
         return $instance;
@@ -63,7 +70,7 @@ class Application extends Locator
     /**
      * extend application with extension
      * @param string $extension
-     * @return Cti\Core\Application
+     * @return Application
      */
     function extend($extension)
     {
@@ -81,6 +88,15 @@ class Application extends Locator
      */
     public function getClasses($namespace)
     {
+        /**
+         * @var Cache $cache
+         */
+        $cache = $this->get('manager')->get('Cti\Di\Cache');
+
+        if($cache->contains(__CLASS__, __METHOD__, array($namespace))) {
+            return $cache->get(__CLASS__, __METHOD__, array($namespace));
+        }
+
         $classes = array();
         $path = $this->getPath("src php $namespace");
 
@@ -90,6 +106,8 @@ class Application extends Locator
                 $classes[] = $namespace . '\\' . $file->getBasename('.php');
             }            
         }
+
+        $cache->set(__CLASS__, __METHOD__, array($namespace), $classes);
 
         return $classes;
     }
@@ -101,6 +119,15 @@ class Application extends Locator
      */
     public function getPath($string)
     {
+        /**
+         * @var Cache $cache
+         */
+        $cache = $this->get('manager')->get('Cti\Di\Cache');
+
+        if($cache->contains(__CLASS__, __METHOD__, array($string))) {
+            return $cache->get(__CLASS__, __METHOD__, array($string));
+        }
+
         $args = func_get_args();
         if(count($args) == 1) {
             $args = explode(' ', $args[0]);
@@ -109,7 +136,11 @@ class Application extends Locator
         $args = array_filter($args, 'strlen');
         array_unshift($args, $this->path);
 
-        return implode(DIRECTORY_SEPARATOR, $args);
+        $result = implode(DIRECTORY_SEPARATOR, $args);
+
+        $cache->set(__CLASS__, __METHOD__, array($string), $result);
+
+        return $result;
 
     }
 }

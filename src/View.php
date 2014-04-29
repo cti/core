@@ -2,10 +2,6 @@
 
 namespace Cti\Core;
 
-use BadMethodCallException;
-use Exception;
-use OutOfRangeException;
-
 /**
  * Template engine
  * @package Cti\Core
@@ -13,12 +9,12 @@ use OutOfRangeException;
 class View
 {
     /**
-     * @var Cti\Core\Application 
+     * @var Application
      */
     protected $application;
 
     /**
-     * @param Cti\Core\Application $application 
+     * @param Application $application
      */
     public function __construct(Application $application)
     {

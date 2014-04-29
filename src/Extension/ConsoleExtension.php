@@ -23,6 +23,8 @@ class ConsoleExtension
                 }
             }
 
+            $console->add($application->getManager()->get('Cti\Core\Command\BuildCache'));
+
             return $console;
         });
     }
