@@ -37,10 +37,6 @@ class Generator
     {
         $project = $configuration->get('Cti\Core\Module\Project');
 
-        if(!isset($project['path'])) {
-            throw new Exception('Cti\Core\Module\Project.path not defined');
-        }
-
         $filename = implode(DIRECTORY_SEPARATOR, array($project['path'], 'build', 'php', 'Build', 'Application.php'));
 
         $filesystem = new Filesystem();

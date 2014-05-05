@@ -2,7 +2,7 @@
 
 return array(
     'Cti\Core\Application\Factory' => array(
-        'force' => true,
+        'generate' => true,
     ),
     'Cti\Core\Application\Generator' => array(
         'modules' => array(

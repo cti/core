@@ -97,6 +97,11 @@ class ApplicationTest extends PHPUnit_Framework_TestCase
         Factory::create(array())->getApplication();
     }
 
+    function testProjectConfig()
+    {
+        $this->setExpectedException('Exception');
+        Factory::create(array('Cti\Core\Module\Project' => array()))->getApplication();
+    }
 
     function testEmpty()
     {
