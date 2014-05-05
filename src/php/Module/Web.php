@@ -8,7 +8,7 @@ use Cti\Di\Manager;
 use Cti\Di\Reflection;
 
 /**
- * Web application implementation
+ * Web module
  * @package Cti\Core
  */
 class Web
@@ -36,6 +36,11 @@ class Web
     protected $controllers = array();
 
 
+    /**
+     * collect controllers list
+     * @param Project $project
+     * @throws \Cti\Core\Exception
+     */
     public function init(Project $project)
     {
         foreach($project->getClasses('Controller') as $controller) {
@@ -89,6 +94,12 @@ class Web
         }
     }
 
+    /**
+     * mount controller
+     * @param $location
+     * @param $controller
+     * @throws \Cti\Core\Exception
+     */
     public function add($location, $controller)
     {
         if($location[0] != '/') {
@@ -103,6 +114,11 @@ class Web
         $this->controllers[$location] = $controller;
     }
 
+    /**
+     * run web processor
+     * @throws \Cti\Core\Exception
+     * @throws \Exception
+     */
     public function run()
     {
         $mount = array();
@@ -159,7 +175,7 @@ class Web
     }
 
     /**
-     * generate relative aplication url
+     * generate relative application url
      * @param  string $location
      * @return string
      */

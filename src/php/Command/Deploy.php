@@ -12,7 +12,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Finder\Finder;
 
-class BuildCache extends Command
+class Deploy extends Command
 {
     /**
      * @inject
@@ -20,16 +20,26 @@ class BuildCache extends Command
      */
     protected $application;
 
+    /**
+     * configure deploy command
+     */
     protected function configure()
     {
         $this
-            ->setName('build:cache')
+            ->setName('deploy')
             ->setDescription("Generate di cache file");
     }
 
+    /**
+     * process deploy
+     * @param InputInterface $input
+     * @param OutputInterface $output
+     * @return null
+     * @throws \Cti\Di\Exception
+     */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $filename = $this->application->getProject()->getPath('build php cache.php');
+        $filename = $this->getApplication()->getProject()->getPath('build php cache.php');
         $filesystem = new Filesystem();
         if($filesystem->exists($filename)) {
             $filesystem->remove($filename);
@@ -38,8 +48,8 @@ class BuildCache extends Command
         $finder = new Finder();
 
         $coreSource = dirname(__DIR__);
-        $buildSource = $this->application->getProject()->getPath('build php');
-        $source = $this->application->getProject()->getPath('src php');
+        $buildSource = $this->getApplication()->getProject()->getPath('build php');
+        $source = $this->getApplication()->getProject()->getPath('src php');
 
         $path = array($coreSource, $source);
 
@@ -49,7 +59,7 @@ class BuildCache extends Command
 
         $finder->in($path)->files();
 
-        $inspector = $this->application->getManager()->getInspector();
+        $inspector = $this->getApplication()->getManager()->getInspector();
 
         foreach($finder as $file) {
             $path = $file->getPath();
@@ -80,19 +90,27 @@ class BuildCache extends Command
             'Api',
             'Controller',
             'Direct',
-            'Extension',
+            'Module',
             'Model',
         );
 
         foreach($namespaces as $ns) {
-            $this->application->getProject()->getClasses($ns);
+            $this->getApplication()->getProject()->getClasses($ns);
         }
 
         /**
          * @var Cache $cache
          */
-        $cache = $this->application->getManager()->get('Cti\Di\Cache');
+        $cache = $this->getApplication()->getManager()->get('Cti\Di\Cache');
 
         $filesystem->dumpFile($filename, '<?php return '. var_export($cache->getData(), true).';');
+    }
+
+    /**
+     * @return Application
+     */
+    public function getApplication()
+    {
+        return $this->application;
     }
 }

@@ -4,6 +4,10 @@ namespace Cti\Core\Module;
 
 use Symfony\Component\Finder\Finder;
 
+/**
+ * Class Project
+ * @package Cti\Core\Module
+ */
 class Project
 {
     /**
@@ -25,7 +29,7 @@ class Project
             $finder = new Finder();
             foreach($finder->files()->name('*.php')->in($path) as $file) {
                 $classes[] = $namespace . '\\' . $file->getBasename('.php');
-            }            
+            }
         }
 
         return $classes;
@@ -51,5 +55,5 @@ class Project
 
         return $result;
 
-    }	
+    }
 }

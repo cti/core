@@ -5,6 +5,10 @@ namespace Cti\Core\Module;
 use Cti\Core\Exception;
 use Symfony\Component\Filesystem\Filesystem;
 
+/**
+ * Coffee Machine
+ * @package Cti\Core\Module
+ */
 class Coffee
 {
     /**
@@ -13,8 +17,17 @@ class Coffee
      */
     protected $project;
 
+    /**
+     * source list
+     * @var array
+     */
     protected $sources = array();
 
+    /**
+     * @param $script
+     * @return string
+     * @throws \Cti\Core\Exception
+     */
     public function build($script)
     {
         $result = '';
@@ -135,9 +148,7 @@ class Coffee
             preg_match_all($p, $require, $match);
             $required_classes = array_merge($required_classes, $match[1]);
         }
-
         return array_merge($requires,$required_classes);
-
     }
 
     protected function getMixins($text)
@@ -152,7 +163,6 @@ class Coffee
                 $mix = array_merge($mix, $classes[1]);
             }
         }
-
         return $mix;
     }
 
@@ -160,7 +170,6 @@ class Coffee
     {
         $p = "/extend\s*:\s*['\"]([a-zA-Z0-9._]+)['\"]/";
         preg_match_all($p, $text, $answer);
-
         return $answer[1];
     }
 
@@ -168,7 +177,6 @@ class Coffee
     {
         $p = "/Ext.create ['\"]([a-zA-Z0-9.]+)['\"]/";
         preg_match_all($p, $text, $answer);
-
         return $answer[1];
     }
     

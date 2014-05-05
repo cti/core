@@ -2,37 +2,38 @@
 
 use Cti\Core\Application;
 use Cti\Core\Barista;
+use Cti\Core\Module\Coffee;
 
 class BaristaTest extends PHPUnit_Framework_TestCase
 {
     function testCompilation()
     {
-        $barista = $this->getBarista();
+        $barista = $this->getCoffee();
         $this->assertFileExists($barista->build('test'));
     }
 
     function testClassSourceFail()
     {
         $this->setExpectedException('Exception');
-        $this->getBarista()->getClassSource('Acme');
+        $this->getCoffee()->getClassSource('Acme');
     }
 
     function testLocalPathFail()
     {
         $this->setExpectedException('Exception');
-        $this->getBarista()->getLocalPath('Acme');
+        $this->getCoffee()->getLocalPath('Acme');
     }
 
     function testDependencyListFail()
     {
         $this->setExpectedException('Exception');
-        $this->getBarista()->build('Error');
+        $this->getCoffee()->build('Error');
     }
 
     /**
-     * @return Barista
+     * @return Coffee
      */
-    protected function getBarista()
+    protected function getCoffee()
     {
         $config = array(
             'Cti\Core\Module\Project' => array(

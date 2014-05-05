@@ -2,6 +2,10 @@
 
 namespace Cti\Core\Module;
 
+/**
+ * Class Core
+ * @package Cti\Core\Module
+ */
 class Core extends Project
 {
     /**
@@ -9,6 +13,9 @@ class Core extends Project
      */
     public $path;
 
+    /**
+     * init core project path
+     */
     public function init()
     {
         $this->path = dirname(dirname(dirname(__DIR__)));

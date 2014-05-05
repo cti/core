@@ -7,9 +7,7 @@ class ApplicationTest extends PHPUnit_Framework_TestCase
 {
     function testGenerator()
     {
-        $config = implode(DIRECTORY_SEPARATOR, array(__DIR__, 'resources', 'php', 'config.php'));
-
-        $application = Factory::create($config)->getApplication();
+        $application = Factory::create(__DIR__)->getApplication();
 
         $this->assertInstanceOf('Build\Application', $application);
 
@@ -24,8 +22,7 @@ class ApplicationTest extends PHPUnit_Framework_TestCase
 
     function testLocalConfig()
     {
-        $config = implode(DIRECTORY_SEPARATOR, array(__DIR__, 'resources', 'php', 'config.php'));
-        $app = Factory::create($config)->getApplication();
+        $app = Factory::create(__DIR__)->getApplication();
 
         $configuration = $app->getManager()->getConfiguration();
 
@@ -69,7 +66,7 @@ class ApplicationTest extends PHPUnit_Framework_TestCase
         $application = Factory::create($config)->getApplication();
 
         $console = $application->getConsole();
-        $console->execute('build:cache');
+        $console->execute('deploy');
 
         $cache = $application->getProject()->getPath('build php cache.php');
 

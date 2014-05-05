@@ -8,6 +8,11 @@ namespace Cti\Core;
  */
 class String
 {
+    /**
+     * convert under_score to UnderScore
+     * @param $string
+     * @return string
+     */
     public static function convertToCamelCase($string)
     {
         foreach(array('_', '-', '.') as $delimiter) {
@@ -18,6 +23,11 @@ class String
         return ucfirst($string);
     }
 
+    /**
+     * convert CamelCase to camel_case string
+     * @param $string
+     * @return string
+     */
     static function camelCaseToUnderScore($string) 
     {
         $start = 0;

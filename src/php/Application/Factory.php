@@ -3,18 +3,19 @@
 namespace Cti\Core\Application;
 
 use Build\Application;
+use Cti\Core\Exception;
 use Cti\Di\Manager;
 
 class Factory
 {
     /**
-     * @param $config
+     * @param $root
      * @return Factory
      */
-    static function create($config)
-	{
-		return new self($config);
-	}
+    static function create($root)
+    {
+        return new self($root);
+    }
 
     /**
      * @var Manager
@@ -24,7 +25,7 @@ class Factory
     /**
      * @var bool
      */
-    protected $force = true;
+    protected $generate = true;
 
     /**
      * @var Application
@@ -32,28 +33,49 @@ class Factory
     protected $application;
 
     /**
-     * @param string $config
+     * @param string $root
      */
-    function __construct($config)
-	{
-        $this->manager = new Manager();
-        $this->manager->getConfiguration()->load($config);
-        $this->manager->register($this);
+    function __construct($root)
+    {
+        $this->manager = $manager = new Manager();
 
-        $factory = $this->manager->getConfiguration()->get(__CLASS__);
+        if (is_string($root)) {
+            $config = implode(DIRECTORY_SEPARATOR, array($root, 'resources', 'php', 'config.php'));
+            $this->manager->getConfiguration()->load($config);
 
-        if(isset($factory['force'])) {
-            $this->force = $factory['force'];
+        } elseif (is_array($root)) {
+            if(!isset($root['Cti\Core\Module\Project'])) {
+                throw new Exception('Cti\Core\Module\Project configuration required');
+            }
+
+            $project = $root['Cti\Core\Module\Project'];
+            if(!isset($project['path'])) {
+                throw new Exception('Cti\Core\Module\Project.path property required');
+            }
+
+            $this->manager->getConfiguration()->load($root);
+
+        } else {
+            throw new Exception("Can't process factory  constructor param");
+
         }
-	}
+
+        $manager->register($this);
+
+        $factory = $manager->getConfiguration()->get(__CLASS__);
+
+        if (isset($factory['generate'])) {
+            $this->generate = $factory['generate'];
+        }
+    }
 
     /**
      * @return Application
      */
     function getApplication()
     {
-        if(!isset($this->application)) {
-            if($this->force) {
+        if (!isset($this->application)) {
+            if ($this->generate) {
                 $this->manager->create('Cti\Core\Application\Generator');
             }
             $this->application = $this->manager->create('Build\\Application');
