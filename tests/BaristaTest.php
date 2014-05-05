@@ -35,15 +35,12 @@ class BaristaTest extends PHPUnit_Framework_TestCase
     protected function getBarista()
     {
         $config = array(
-            'Cti\Core\Application' => array(
+            'Cti\Core\Module\Project' => array(
                 'path' => __DIR__
             ),
         );
 
-        $application = Application::create($config);
-
-        $barista = $application->get('manager')->get('Cti\Core\Barista');
-        return $barista;
+        return Application\Factory::create($config)->getApplication()->getCoffee();
     }
 }
 

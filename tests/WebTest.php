@@ -1,7 +1,7 @@
 <?php
 
+use Cti\Core\Module\Web;
 use Cti\Di\Manager;
-use Cti\Core\Web;
 
 class WebTest extends PHPUnit_Framework_TestCase
 {
@@ -13,7 +13,7 @@ class WebTest extends PHPUnit_Framework_TestCase
             $_SERVER['REQUEST_URI'] = '/';
         }
         $manager = new Manager();
-        return $manager->create('Cti\Core\Web', array(
+        return $manager->create('Cti\Core\Module\Web', array(
             'base' => $base
         ));
     }
@@ -26,7 +26,7 @@ class WebTest extends PHPUnit_Framework_TestCase
 
         $manager = new Manager;
         $manager->setConfigureAllProperties(true);
-        $web = $manager->create('Cti\Core\Web', array(
+        $web = $manager->create('Cti\Core\Module\Web', array(
             'base' => '/',
             'controllers' => array(
                 'Controller\DefaultController'
@@ -47,7 +47,7 @@ class WebTest extends PHPUnit_Framework_TestCase
 
         $manager = new Manager;
         $manager->setConfigureAllProperties(true);        
-        $web = $manager->create('Cti\Core\Web', array(
+        $web = $manager->create('Cti\Core\Module\Web', array(
             'base' => '/',
             'controllers' => array(
                 'Controller\DefaultController',
@@ -101,7 +101,7 @@ class WebTest extends PHPUnit_Framework_TestCase
         $_SERVER['REQUEST_METHOD'] = 'GET';
         $_SERVER['REQUEST_URI'] = '/application-url/direct';
 
-        $web = $manager->create('Cti\Core\Web', array(
+        $web = $manager->create('Cti\Core\Module\Web', array(
             'base' => '/application-url/'
         ));
 
@@ -159,8 +159,6 @@ class WebTest extends PHPUnit_Framework_TestCase
 
     public function testExceptionController()
     {
-        $manager = new Manager;
-
         $_SERVER['REQUEST_METHOD'] = 'GET';
         $_SERVER['REQUEST_URI'] = '/t/';
 
@@ -174,8 +172,6 @@ class WebTest extends PHPUnit_Framework_TestCase
 
     public function testNoController()
     {
-        $manager = new Manager;
-
         $_SERVER['REQUEST_METHOD'] = 'GET';
         $_SERVER['REQUEST_URI'] = '/t/';
 
@@ -187,8 +183,6 @@ class WebTest extends PHPUnit_Framework_TestCase
 
     public function testNotFound()
     {
-        $manager = new Manager;
-
         $_SERVER['REQUEST_METHOD'] = 'GET';
         $_SERVER['REQUEST_URI'] = '/t/';
 

@@ -2,10 +2,10 @@
 
 namespace Cti\Core\Command;
 
-use Cti\Core\Application;
+use Build\Application;
 use Cti\Di\Cache;
-use Cti\Di\Manager;
 use Cti\Di\Reflection;
+
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -29,7 +29,7 @@ class BuildCache extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $filename = $this->application->getPath('build php cache.php');
+        $filename = $this->application->getProject()->getPath('build php cache.php');
         $filesystem = new Filesystem();
         if($filesystem->exists($filename)) {
             $filesystem->remove($filename);
@@ -38,8 +38,8 @@ class BuildCache extends Command
         $finder = new Finder();
 
         $coreSource = dirname(__DIR__);
-        $buildSource = $this->application->getPath('build php');
-        $source = $this->application->getPath('src php');
+        $buildSource = $this->application->getProject()->getPath('build php');
+        $source = $this->application->getProject()->getPath('src php');
 
         $path = array($coreSource, $source);
 
@@ -85,7 +85,7 @@ class BuildCache extends Command
         );
 
         foreach($namespaces as $ns) {
-            $this->application->getClasses($ns);
+            $this->application->getProject()->getClasses($ns);
         }
 
         /**

@@ -1,6 +1,7 @@
 <?php
 
 namespace Cti\Core;
+use Cti\Core\Module\Project;
 
 /**
  * Template engine
@@ -9,16 +10,16 @@ namespace Cti\Core;
 class View
 {
     /**
-     * @var Application
+     * @var Module\Project
      */
-    protected $application;
+    protected $project;
 
     /**
-     * @param Application $application
+     * @param Project $project
      */
-    public function __construct(Application $application)
+    public function __construct(Project $project)
     {
-        $this->application = $application;
+        $this->project = $project;
     }
 
     /**
@@ -32,7 +33,7 @@ class View
         try {
             extract($data);
             ob_start();
-            include $this->application->getPath('resources php view '.func_get_arg(0).'.php');
+            include $this->project->getPath('resources php view '.func_get_arg(0).'.php');
             return ob_get_clean();
         } catch(\Exception $e) {
             return $e->getMessage();

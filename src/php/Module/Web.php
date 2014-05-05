@@ -1,7 +1,10 @@
 <?php
 
-namespace Cti\Core;
+namespace Cti\Core\Module;
 
+use Cti\Core\Exception;
+use Cti\Core\String;
+use Cti\Di\Manager;
 use Cti\Di\Reflection;
 
 /**
@@ -23,7 +26,7 @@ class Web
 
     /**
      * @inject
-     * @var Cti\Di\Manager
+     * @var Manager
      */
     protected $manager;
 
@@ -33,8 +36,18 @@ class Web
     protected $controllers = array();
 
 
-    public function init()
+    public function init(Project $project)
     {
+        foreach($project->getClasses('Controller') as $controller) {
+            $location = '/';
+            $name = Reflection::getReflectionClass($controller)->getShortName();
+            $slug = String::camelCaseToUnderScore(substr($name, 0, -1 * strlen('Controller')));
+            if($slug != 'default') {
+                $location = '/' . $slug;
+            }
+            $this->add($location, $controller);
+        }
+
         // validate base
         if ($this->base != '/') {
             if ($this->base[0] != '/') {
@@ -147,7 +160,7 @@ class Web
 
     /**
      * generate relative aplication url
-     * @param  string $location 
+     * @param  string $location
      * @return string
      */
     function getUrl($location = '')

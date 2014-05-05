@@ -10,8 +10,11 @@ class ToolsTests extends PHPUnit_Framework_TestCase
 {
     function testView()
     {
-        $app = Application::create(__DIR__ . '/resources/php/config.php');
-        $view = new View($app);
+        $factory = Application\Factory::create(__DIR__ . '/resources/php/config.php');
+        $application = $factory->getApplication();
+        $project = $application->getProject();
+
+        $view = new View($project);
         ob_start();
         $view->show('test');
         $this->assertSame($view->render('test'), ob_get_clean());

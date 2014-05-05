@@ -1,16 +1,31 @@
 <?php
 
-use Cti\Core\Application;
-use Symfony\Component\Console\Input\ArrayInput;
-use Symfony\Component\Console\Output\NullOutput;
+use Cti\Core\Application\Factory;
 use Symfony\Component\Filesystem\Filesystem;
 
 class ApplicationTest extends PHPUnit_Framework_TestCase
 {
+    function testGenerator()
+    {
+        $config = implode(DIRECTORY_SEPARATOR, array(__DIR__, 'resources', 'php', 'config.php'));
+
+        $application = Factory::create($config)->getApplication();
+
+        $this->assertInstanceOf('Build\Application', $application);
+
+        // default modules
+        $this->assertTrue(method_exists($application, 'getWeb'));
+        $this->assertTrue(method_exists($application, 'getConsole'));
+        $this->assertTrue(method_exists($application, 'getProject'));
+
+        // project modules
+        $this->assertTrue(method_exists($application, 'getGreet'));
+    }
+
     function testLocalConfig()
     {
         $config = implode(DIRECTORY_SEPARATOR, array(__DIR__, 'resources', 'php', 'config.php'));
-        $app = Application::create($config);
+        $app = Factory::create($config)->getApplication();
 
         $configuration = $app->getManager()->getConfiguration();
 
@@ -26,70 +41,78 @@ class ApplicationTest extends PHPUnit_Framework_TestCase
         $_SERVER['REQUEST_METHOD'] = 'GET';
         $_SERVER['REQUEST_URI'] = '/';
         $config = array(
-            'Cti\Core\Application' => array(
+            'Cti\Core\Module\Project' => array(
                 'path' => __DIR__
             ),
         );
 
-        $application = Application::create($config);
-        
+        $application = Factory::create($config)->getApplication();
+
         ob_start();
         $application->getWeb()->run();
         $this->assertSame(ob_get_clean(), 'index page');
-        
-        $this->assertInstanceOf('Symfony\Component\Console\Application', $application->getConsole());
 
-        $cache = $application->getPath('build php cache.php');
+        $cache = $application->getProject()->getPath('build php cache.php');
 
         $fs = new Filesystem();
         $fs->dumpFile($cache, '<?php return array();');
+    }
 
-        /**
-         * @var \Symfony\Component\Console\Application $console
-         */
+    function testCaching()
+    {
+        $config = array(
+            'Cti\Core\Module\Project' => array(
+                'path' => __DIR__
+            )
+        );
+
+        $application = Factory::create($config)->getApplication();
+
         $console = $application->getConsole();
-        $command = $console->find("build:cache");
+        $console->execute('build:cache');
 
-        $input = new ArrayInput(array(
-            'command' => 'build:cache',
-        ));
-
-        $output = new NullOutput;
-        $command->run($input, $output);
+        $cache = $application->getProject()->getPath('build php cache.php');
 
         $this->assertFileExists($cache);
 
-        $cachedApplication = Application::create($config);
+        $cachedApplication = $application;
 
         $this->assertGreaterThan(100, count($cachedApplication->getManager()->get('Cti\Di\Cache')->getData()));
 
         unlink($cache);
 
-        $newApplication = Application::create($config);
+        $newApplication = Factory::create($config)->getApplication();
         $this->assertLessThan(100, count($newApplication->getManager()->get('Cti\Di\Cache')->getData()));
 
-        $fs->dumpFile($cache, '<?php return array();');
+        $filesystem = new Filesystem();
+        $filesystem->dumpFile($cache, '<?php return array();');
     }
 
     function testFailCreation()
     {
         $this->setExpectedException('Exception');
-        Application::create(2*2);
+        Factory::create(2 * 2)->getApplication();
     }
+
+    function testProjectPath()
+    {
+        $this->setExpectedException('Exception');
+        Factory::create(array())->getApplication();
+    }
+
 
     function testEmpty()
     {
         $_SERVER['REQUEST_METHOD'] = 'GET';
         $_SERVER['REQUEST_URI'] = '/';
         $config = array(
-            'Cti\Core\Application' => array( 
-                'path' => dirname(__DIR__)
+            'Cti\Core\Module\Project' => array(
+                'path' => __DIR__
             )
         );
 
-        $application = Application::create($config);
+        $application = Factory::create($config)->getApplication();
         $application->getWeb();
         $application->getConsole();
     }
-    
 }

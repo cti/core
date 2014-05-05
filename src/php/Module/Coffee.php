@@ -1,16 +1,17 @@
 <?php
 
-namespace Cti\Core;
+namespace Cti\Core\Module;
 
+use Cti\Core\Exception;
 use Symfony\Component\Filesystem\Filesystem;
 
-class Barista
+class Coffee
 {
     /**
      * @inject
-     * @var Application
+     * @var Project
      */
-    protected $application;
+    protected $project;
 
     protected $sources = array();
 
@@ -18,7 +19,7 @@ class Barista
     {
         $result = '';
 
-        $filename = $this->application->getPath("resources coffee $script.coffee");
+        $filename = $this->project->getPath("resources coffee $script.coffee");
         $dependencies = $this->getDependencyList($filename);
 
         foreach(array_reverse($dependencies) as $coffee) {
@@ -26,7 +27,7 @@ class Barista
             $local = $this->getLocalPath($coffee);
 
             $local = dirname($local) . DIRECTORY_SEPARATOR . basename($local, 'coffee') .'js';
-            $javascript = $this->application->getPath(sprintf('build js %s', $local));
+            $javascript = $this->project->getPath(sprintf('build js %s', $local));
 
             $out = dirname($javascript);
             $command = "coffee -b -o $out -c $coffee";
@@ -38,7 +39,7 @@ class Barista
         }
 
         $fs = new Filesystem;
-        $filename = $this->application->getPath("public js $script.js");
+        $filename = $this->project->getPath("public js $script.js");
         $fs->dumpFile($filename, $result);
 
         return $filename;
@@ -46,8 +47,8 @@ class Barista
 
     public function init()
     {
-        $this->addSource($this->application->getPath('src coffee'));
-        $this->addSource($this->application->getPath('resources coffee'));
+        $this->addSource($this->project->getPath('src coffee'));
+        $this->addSource($this->project->getPath('resources coffee'));
     }
 
     public function addSource($location)
