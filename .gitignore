@@ -1,5 +1,6 @@
-vendor
-build
-composer.lock
-.idea
-tests/public
+/vendor/
+/build/
+/composer.lock
+/.idea/
+/tests/build
+/tests/public

@@ -45,6 +45,10 @@ class Generator
 
         $filesystem = new Filesystem();
         $filesystem->dumpFile($filename, $this->renderApplication());
+
+        if(!class_exists('Build\Application')) {
+            include $filename;
+        }
     }
 
     /**
