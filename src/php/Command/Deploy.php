@@ -105,7 +105,7 @@ class Deploy extends Command
         /**
          * @var Cache $cache
          */
-        $cache = $this->getApplication()->getManager()->get('Cti\Di\Cache');
+        $cache = $this->getApplication()->getManager()->get('Cti\\Di\\Cache');
 
         $filesystem->dumpFile($filename, '<?php return '. var_export($cache->getData(), true).';');
     }

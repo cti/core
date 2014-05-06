@@ -80,7 +80,7 @@ class Factory
     {
         if (!isset($this->application)) {
             if ($this->generate) {
-                $this->manager->create('Cti\Core\Application\Generator');
+                $this->manager->create('Cti\\Core\\Application\\Generator');
             }
             $this->application = $this->manager->create('Build\\Application');
         }
