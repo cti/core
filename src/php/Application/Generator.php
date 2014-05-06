@@ -19,6 +19,7 @@ class Generator
      * @var array
      */
     protected $core = array(
+        'Cti\\Core\\Module\\Cache',
         'Cti\\Core\\Module\\Coffee',
         'Cti\\Core\\Module\\Console',
         'Cti\\Core\\Module\\Core',

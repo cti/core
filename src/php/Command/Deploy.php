@@ -3,6 +3,7 @@
 namespace Cti\Core\Command;
 
 use Build\Application;
+use Cti\Core\Application\Factory;
 use Cti\Di\Cache;
 use Cti\Di\Reflection;
 
@@ -31,7 +32,7 @@ class Deploy extends Command
     {
         $this
             ->setName('deploy')
-            ->setDescription("Generate di cache file");
+            ->setDescription("Generate application files");
     }
 
     /**
@@ -43,71 +44,16 @@ class Deploy extends Command
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $filename = $this->getApplication()->getProject()->getPath('build php cache.php');
         $filesystem = new Filesystem();
-        if($filesystem->exists($filename)) {
-            $filesystem->remove($filename);
-        }
 
-        $finder = new Finder();
+        // clean up build
+        $filesystem->remove($this->getApplication()->getProject()->getPath('build'));
 
-        $coreSource = dirname(__DIR__);
-        $buildSource = $this->getApplication()->getProject()->getPath('build php');
-        $source = $this->getApplication()->getProject()->getPath('src php');
+        // generate new application
+        Factory::create($this->getApplication()->getProject()->getPath(''));
 
-        $path = array($coreSource, $source);
-
-        if(is_dir($buildSource)) {
-            $path[] = $buildSource;
-        }
-
-        $finder->in($path)->files();
-
-        $inspector = $this->getApplication()->getManager()->getInspector();
-
-        foreach($finder as $file) {
-            $path = $file->getPath();
-            if(strpos($path, $coreSource) === 0) {
-                $namespace = 'Cti\Core' . substr($path, strlen($coreSource));
-
-            } elseif(strpos($path, $buildSource) === 0) {
-                $namespace = substr($path, strlen($buildSource) + 1);
-
-            } elseif(strpos($path, $source) === 0) {
-                $namespace = substr($path, strlen($source) + 1);
-
-            }
-
-            $class = str_replace(DIRECTORY_SEPARATOR, '\\', $namespace) . '\\' . $file->getBasename('.php');
-
-            $inspector->getPublicMethods($class);
-            $inspector->getClassInjection($class);
-            $inspector->getClassProperties($class);
-
-            foreach(Reflection::getReflectionClass($class)->getMethods() as $method) {
-                $inspector->getMethodArguments($class, $method->getName());
-                $inspector->getMethodRequiredCount($class, $method->getName());
-            }
-        }
-
-        $namespaces = array(
-            'Api',
-            'Controller',
-            'Direct',
-            'Module',
-            'Model',
-        );
-
-        foreach($namespaces as $ns) {
-            $this->getApplication()->getProject()->getClasses($ns);
-        }
-
-        /**
-         * @var Cache $cache
-         */
-        $cache = $this->getApplication()->getManager()->get('Cti\\Di\\Cache');
-
-        $filesystem->dumpFile($filename, '<?php return '. var_export($cache->getData(), true).';');
+        // generate cache files
+        $this->getApplication()->getCache()->generate();
     }
 
     /**

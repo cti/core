@@ -70,7 +70,7 @@ class ApplicationTest extends PHPUnit_Framework_TestCase
         $console = $application->getConsole();
         $console->execute('deploy');
 
-        $cache = $application->getProject()->getPath('build php cache.php');
+        $cache = $application->getProject()->getPath('build cache di.php');
 
         $this->assertFileExists($cache);
 
