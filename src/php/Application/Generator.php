@@ -68,6 +68,11 @@ class Application
      */
     protected \$manager;
 
+
+HEADER;
+
+        $bootstrap = array();
+        $methods = array('Manager' => <<<MANAGER
     /**
      * @return Manager
      */
@@ -75,9 +80,8 @@ class Application
     {
         return \$this->manager;
     }
-HEADER;
-
-        $methods = array('manager' => '');
+MANAGER
+);
         foreach(array($this->core, $this->modules) as $source) {
             foreach($source as $alias => $class) {
                 if(is_numeric($alias)) {
@@ -86,10 +90,18 @@ HEADER;
                     $alias = String::convertToCamelCase($alias);
                 }
                 if(!isset($methods[$alias])) {
+                    if(Reflection::getReflectionClass($class)->implementsInterface('Cti\Core\Application\Bootstrap')) {
+                        $bootstrap[] = $alias;
+                    }
                     $methods[$alias] = $this->renderGetter($alias, $class);
                 }
             }
         }
+        if(count($bootstrap)) {
+            $methods['-1'] = $this->renderBootstrap($bootstrap);
+        }
+
+        ksort($methods);
         $contents .= implode(PHP_EOL . PHP_EOL, $methods);
         $contents .= PHP_EOL . '}';
 
@@ -110,6 +122,26 @@ HEADER;
     public function $getter()
     {
         return \$this->getManager()->get('$class');
+    }
+METHOD;
+
+    }
+
+    private function renderBootstrap($bootstrap)
+    {
+        $commands = array();
+        foreach($bootstrap as $alias) {
+            $commands[] .= '$this->get'.$alias.'()->boot($this);';
+        }
+
+        $commands = implode(PHP_EOL . '        ', $commands);
+        return <<<METHOD
+    /**
+     * initialize application
+     */
+    public function init()
+    {
+        $commands
     }
 METHOD;
 
