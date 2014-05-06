@@ -16,8 +16,8 @@ class Generator
      */
     protected $core = array(
         'Cti\Core\Module\Coffee',
-        'Cti\Core\Module\Core',
         'Cti\Core\Module\Console',
+        'Cti\Core\Module\Core',
         'Cti\Core\Module\Project',
         'Cti\Core\Module\Web',
     );
@@ -131,7 +131,7 @@ METHOD;
     {
         $commands = array();
         foreach($bootstrap as $alias) {
-            $commands[] .= '$this->get'.$alias.'()->boot($this);';
+            $commands[] .= '$this->get' . $alias . '()->boot($this);';
         }
 
         $commands = implode(PHP_EOL . '        ', $commands);
