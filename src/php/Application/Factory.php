@@ -6,6 +6,10 @@ use Build\Application;
 use Cti\Core\Exception;
 use Cti\Di\Manager;
 
+/**
+ * Class Factory
+ * @package Cti\Core\Application
+ */
 class Factory
 {
     /**

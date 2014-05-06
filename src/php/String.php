@@ -43,8 +43,13 @@ class String
         }
         $data[] = strtolower(substr($string, $start, $k - $start));
         return implode('_', $data);
-    }    
+    }
 
+    /**
+     * pluralize string
+     * @param $string
+     * @return string
+     */
     public static function pluralize($string)
     {
         $index = strlen($string)-1;
@@ -60,7 +65,13 @@ class String
 
         return $string.'s';
     }
-    
+
+    /**
+     * format size in bytes
+     * @param $size
+     * @param int $precision
+     * @return string
+     */
     public static function formatBytes($size, $precision = 2)
     {
         $base = log($size) / log(1024);
