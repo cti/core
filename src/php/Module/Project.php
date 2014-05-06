@@ -16,6 +16,12 @@ class Project
     public $path;
 
     /**
+     * namespace prefix
+     * @var string
+     */
+    public $prefix;
+
+    /**
      * get project class list
      * @param string $namespace
      * @return array
@@ -28,7 +34,7 @@ class Project
         if(is_dir($path)) {
             $finder = new Finder();
             foreach($finder->files()->name('*.php')->in($path) as $file) {
-                $classes[] = $namespace . '\\' . $file->getBasename('.php');
+                $classes[] = $this->prefix . $namespace . '\\' . $file->getBasename('.php');
             }
         }
 

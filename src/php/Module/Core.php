@@ -9,15 +9,11 @@ namespace Cti\Core\Module;
 class Core extends Project
 {
     /**
-     * @var string
-     */
-    public $path;
-
-    /**
      * init core project path
      */
     public function init()
     {
         $this->path = dirname(dirname(dirname(__DIR__)));
+        $this->prefix = 'Cti\\Core\\';
     }
 }

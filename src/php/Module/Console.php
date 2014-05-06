@@ -3,6 +3,7 @@
 namespace Cti\Core\Module;
 
 use Cti\Di\Manager;
+use Cti\Di\Reflection;
 use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Output\NullOutput;
@@ -14,20 +15,32 @@ use Symfony\Component\Console\Output\NullOutput;
 class Console extends Application
 {
     /**
+     * @inject
+     * @var Manager
+     */
+    protected $manager;
+
+    /**
      * Initialize console application
      * @param Core $core
      * @param Project $project
-     * @param Manager $manager
      * @throws \Cti\Di\Exception
      */
-    function init(Core $core, Project $project, Manager $manager)
+    function init(Core $core, Project $project)
     {
-        foreach ($project->getClasses('Command') as $class) {
-            $this->add($manager->get($class));
-        }
+        $commands = array_merge($project->getClasses('Command'), $core->getClasses('Command'));
 
-        foreach ($core->getClasses('Command') as $class) {
-            $this->add($manager->get('Cti\\Core\\' . $class));
+        array_walk($commands, array($this, 'processClass'));
+    }
+
+    /**
+     * add class if it is console command
+     * @param $class
+     */
+    function processClass($class)
+    {
+        if(Reflection::getReflectionClass($class)->isSubclassOf('Symfony\Component\Console\Command\Command')) {
+            $this->add($this->getManager()->get($class));
         }
     }
 
@@ -51,5 +64,13 @@ class Console extends Application
         }
 
         $instance->run($input, $output);
+    }
+
+    /**
+     * @return Manager
+     */
+    public function getManager()
+    {
+        return $this->manager;
     }
 }
