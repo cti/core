@@ -3,6 +3,7 @@
 namespace Cti\Core\Application;
 
 use Cti\Core\Exception;
+use Cti\Core\String;
 use Cti\Di\Configuration;
 use Cti\Di\Reflection;
 use Symfony\Component\Filesystem\Filesystem;
@@ -76,10 +77,17 @@ class Application
     }
 HEADER;
 
-        $methods = array('');
+        $methods = array('manager' => '');
         foreach(array($this->core, $this->modules) as $source) {
-            foreach($source as $class) {
-                $methods[] = $this->renderGetter($class);
+            foreach($source as $alias => $class) {
+                if(is_numeric($alias)) {
+                    $alias = Reflection::getReflectionClass($class)->getShortName();
+                } else {
+                    $alias = String::convertToCamelCase($alias);
+                }
+                if(!isset($methods[$alias])) {
+                    $methods[$alias] = $this->renderGetter($alias, $class);
+                }
             }
         }
         $contents .= implode(PHP_EOL . PHP_EOL, $methods);
@@ -92,10 +100,9 @@ HEADER;
      * @param $class
      * @return string
      */
-    private function renderGetter($class)
+    private function renderGetter($alias, $class)
     {
-        $name = Reflection::getReflectionClass($class)->getShortName();
-        $getter = 'get'.$name;
+        $getter = 'get'.$alias;
         return <<<METHOD
     /**
      * @return \\$class

@@ -6,7 +6,8 @@ return array(
     ),
     'Cti\Core\Application\Generator' => array(
         'modules' => array(
-            'Module\Greet'
+            'Module\Greet',
+            'alias' => 'Module\Greet'
         )
     ),
     'Cti\Core\Module\Project' => array(

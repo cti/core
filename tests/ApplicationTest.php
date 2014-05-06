@@ -17,7 +17,10 @@ class ApplicationTest extends PHPUnit_Framework_TestCase
         $this->assertTrue(method_exists($application, 'getProject'));
 
         // project modules
+        $this->assertTrue(method_exists($application, 'getAlias'));
         $this->assertTrue(method_exists($application, 'getGreet'));
+
+        $this->assertInstanceOf(get_class($application->getGreet()), $application->getAlias());
     }
 
     function testLocalConfig()
