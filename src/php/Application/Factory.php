@@ -45,6 +45,7 @@ class Factory
 
         if (is_string($root)) {
             $config = implode(DIRECTORY_SEPARATOR, array($root, 'resources', 'php', 'config.php'));
+            $this->manager->getConfiguration()->set('Cti\\Core\\Module\\Project', 'path', __DIR__);
             $this->manager->getConfiguration()->load($config);
 
         } elseif (is_array($root)) {

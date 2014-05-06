@@ -50,22 +50,11 @@ class ApplicationTest extends PHPUnit_Framework_TestCase
         ob_start();
         $application->getWeb()->run();
         $this->assertSame(ob_get_clean(), 'index page');
-
-        $cache = $application->getProject()->getPath('build php cache.php');
-
-        $fs = new Filesystem();
-        $fs->dumpFile($cache, '<?php return array();');
     }
 
     function testCaching()
     {
-        $config = array(
-            'Cti\Core\Module\Project' => array(
-                'path' => __DIR__
-            )
-        );
-
-        $application = Factory::create($config)->getApplication();
+        $application = Factory::create(__DIR__)->getApplication();
 
         $console = $application->getConsole();
         $console->execute('deploy');
@@ -80,7 +69,7 @@ class ApplicationTest extends PHPUnit_Framework_TestCase
 
         unlink($cache);
 
-        $newApplication = Factory::create($config)->getApplication();
+        $newApplication = Factory::create(__DIR__)->getApplication();
         $this->assertLessThan(100, count($newApplication->getManager()->get('Cti\Di\Cache')->getData()));
 
         $filesystem = new Filesystem();

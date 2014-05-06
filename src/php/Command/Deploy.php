@@ -50,7 +50,7 @@ class Deploy extends Command
         $filesystem->remove($this->getApplication()->getProject()->getPath('build'));
 
         // generate new application
-        Factory::create($this->getApplication()->getProject()->getPath(''));
+        Factory::create($this->getApplication()->getProject()->getPath(''))->getApplication();
 
         // generate cache files
         $this->getApplication()->getCache()->generate();
