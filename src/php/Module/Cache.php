@@ -51,6 +51,7 @@ class Cache
 
     private function getFilename($key)
     {
+        $key = str_replace('\\', DIRECTORY_SEPARATOR, $key);
         return $this->getApplication()->getProject()->getPath('build cache ' . $key . '.php');
     }
 
