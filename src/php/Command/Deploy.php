@@ -57,11 +57,7 @@ class Deploy extends Command
             throw new Exception("Module\\Cache should be enabled");
         }
 
-        // generate new application
-        $root = $this->getApplication()->getProject()->getPath();
-        Factory::create($root)->getApplication();
-
-        $output->writeln("Complete!");
+        $this->getApplication()->warm();
     }
 
     /**

@@ -2,7 +2,6 @@
 
 namespace Cti\Core\Module;
 
-use Cti\Di\Manager;
 use Cti\Di\Reflection;
 use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Input\ArrayInput;

@@ -2,9 +2,9 @@
 
 namespace Cti\Core\Module;
 
+use Build\Application;
 use Cti\Core\Exception;
 use Cti\Core\String;
-use Cti\Di\Manager;
 use Cti\Di\Reflection;
 
 /**

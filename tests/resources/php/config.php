@@ -12,6 +12,10 @@ return array(
         'path' => dirname(dirname(__DIR__)),
     ),
 
+    'Cti\Di\Cache' => array(
+        'debug' => true,
+    ),
+
     'class' => array(
         'property' => 'value', 
         'property2' => 'value'

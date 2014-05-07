@@ -61,7 +61,7 @@ class Generator
     {
         $contents = $this->renderHeader();
 
-        $bootstrap = array();
+        $bootstrap = $warm = array('Manager');
         $methods = array('Manager' => $this->renderManager());
 
         foreach(array($this->core, $this->modules) as $source) {
@@ -76,13 +76,16 @@ class Generator
                     if(Reflection::getReflectionClass($class)->implementsInterface('Cti\\Core\\Application\\Bootstrap')) {
                         $bootstrap[] = $alias;
                     }
+                    if(Reflection::getReflectionClass($class)->implementsInterface('Cti\\Core\\Application\\Warm')) {
+                        $warm[] = $alias;
+                    }
                     $methods[$alias] = $this->renderGetter($alias, $class);
                 }
             }
         }
-        if(count($bootstrap)) {
-            $methods['-1'] = $this->renderBootstrap($bootstrap);
-        }
+        $methods['-2'] = $this->renderBootstrap($bootstrap);
+
+        $methods['-1'] = $this->renderWarm($warm);
 
         ksort($methods);
         $contents .= implode(PHP_EOL . PHP_EOL, $methods);
@@ -102,7 +105,7 @@ class Generator
 
 namespace Build;
 
-use Cti\\Di\\Manager;
+use Cti\\Core\\Module\\Manager;
 
 class Application
 {
@@ -134,6 +137,30 @@ HEADER;
      * initialize application
      */
     public function init()
+    {
+        $commands
+    }
+METHOD;
+    }
+
+    /**
+     * warm method renderer
+     * @param $bootstrap
+     * @return string
+     */
+    private function renderWarm($bootstrap)
+    {
+        $commands = array();
+        foreach($bootstrap as $alias) {
+            $commands[] .= '$this->get' . $alias . '()->warm($this);';
+        }
+        $commands = implode(PHP_EOL . '        ', $commands);
+
+        return <<<METHOD
+    /**
+     * warm application
+     */
+    public function warm()
     {
         $commands
     }

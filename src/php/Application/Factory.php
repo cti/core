@@ -4,7 +4,7 @@ namespace Cti\Core\Application;
 
 use Build\Application;
 use Cti\Core\Exception;
-use Cti\Di\Manager;
+use Cti\Core\Module\Manager;
 
 /**
  * Class Factory

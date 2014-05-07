@@ -59,25 +59,8 @@ class ApplicationTest extends PHPUnit_Framework_TestCase
         $console = $application->getConsole();
         $console->execute('deploy');
 
-        $cache = $application->getProject()->getPath('build cache di.php');
-
-        $this->assertFileExists($cache);
-
-        $cachedApplication = $application;
-
-        $this->assertGreaterThan(50, count($cachedApplication->getManager()->get('Cti\Di\Cache')->getData()));
-
-        unlink($cache);
-        $configuration = array(
-            'Cti\\Core\\Module\\Project' => array(
-                'path' => __DIR__,
-            ),
-            'Cti\\Core\\Module\\Cache' => array(
-                'enabled' => false,
-            ),
-        );
-        $newApplication = Factory::create($configuration)->getApplication();
-        $this->assertLessThan(50, count($newApplication->getManager()->get('Cti\Di\Cache')->getData()));
+        $this->assertFileExists($application->getProject()->getPath('build cache Cti Core Module Manager.php'));
+        $this->assertFileExists($application->getProject()->getPath('build cache Cti Core Module Project.php'));
     }
 
     function testFailCreation()
