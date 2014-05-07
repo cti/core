@@ -52,6 +52,30 @@ class ApplicationTest extends PHPUnit_Framework_TestCase
         $this->assertSame(ob_get_clean(), 'index page');
     }
 
+    function testProject()
+    {
+        $this->setExpectedException('Exception');
+        $application = Factory::create(__DIR__)->getApplication();
+        $application->getProject()->getClasses('NamespaceFail');
+    }
+
+    function testFailDeploy()
+    {
+        $config = array(
+            'Cti\Core\Module\Project' => array(
+                'path' => __DIR__
+            ),
+            'Cti\Core\Module\Cache' => array(
+                'enabled' => false,
+            ),
+        );
+
+        $application = Factory::create($config)->getApplication();
+
+        $this->setExpectedException('Exception');
+        $application->getConsole()->execute('deploy');
+    }
+
     function testCaching()
     {
         $application = Factory::create(__DIR__)->getApplication();
@@ -61,6 +85,13 @@ class ApplicationTest extends PHPUnit_Framework_TestCase
 
         $this->assertFileExists($application->getProject()->getPath('build cache Cti Core Module Manager.php'));
         $this->assertFileExists($application->getProject()->getPath('build cache Cti Core Module Project.php'));
+    }
+
+    function testWarmBuild()
+    {
+        // build application exists
+        $application = Factory::create(__DIR__)->getApplication();
+        $application->getManager()->warm($application);
     }
 
     function testFailCreation()
@@ -94,5 +125,19 @@ class ApplicationTest extends PHPUnit_Framework_TestCase
         $application = Factory::create($config)->getApplication();
         $application->getWeb();
         $application->getConsole();
+    }
+
+    function testForceGenerate()
+    {
+        $config = array(
+            'Cti\Core\Module\Project' => array(
+                'path' => __DIR__
+            ),
+            'Cti\Core\Application\Factory' => array(
+                'generate' => true,
+            ),
+        );
+
+        Factory::create($config);
     }
 }

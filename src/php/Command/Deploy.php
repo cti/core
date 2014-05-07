@@ -49,6 +49,7 @@ class Deploy extends Command
 
         // clean up build
         $filesystem->remove($this->getApplication()->getProject()->getPath('build'));
+        $filesystem->mkdir($this->getApplication()->getProject()->getPath('build php'));
 
         // check cache module configuration
         $configuration = $this->getApplication()->getManager()->getConfiguration();
