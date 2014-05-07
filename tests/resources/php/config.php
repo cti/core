@@ -2,18 +2,10 @@
 
 return array(
 
-    'Cti\Core\Application\Factory' => array(
-        'generate' => true,
-    ),
-
     'Cti\Core\Application\Generator' => array(
         'modules' => array(
             'alias' => 'Module\Greet'
         )
-    ),
-
-    'Cti\Core\Module\Cache' => array(
-        'enabled' => true,
     ),
 
     'Cti\Core\Module\Project' => array(

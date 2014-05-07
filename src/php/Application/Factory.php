@@ -29,12 +29,17 @@ class Factory
     /**
      * @var bool
      */
-    protected $generate = true;
+    protected $generate = false;
 
     /**
      * @var Application
      */
     protected $application;
+
+    /**
+     * @var string
+     */
+    protected $filename;
 
     /**
      * @param string $root
@@ -65,6 +70,9 @@ class Factory
 
         }
 
+        $root = $this->manager->getConfiguration()->get('Cti\\Core\\Module\\Project', 'path');
+        $this->filename = implode(DIRECTORY_SEPARATOR, array($root, 'build', 'php', 'Build', 'Application.php'));
+
         $manager->register($this);
 
         $factory = $manager->getConfiguration()->get(__CLASS__);
@@ -80,7 +88,7 @@ class Factory
     function getApplication()
     {
         if (!isset($this->application)) {
-            if ($this->generate) {
+            if ($this->generate || !file_exists($this->filename)) {
                 $this->manager->create('Cti\\Core\\Application\\Generator');
             }
             $this->application = $this->manager->create('Build\\Application');

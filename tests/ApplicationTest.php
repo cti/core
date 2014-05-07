@@ -65,15 +65,19 @@ class ApplicationTest extends PHPUnit_Framework_TestCase
 
         $cachedApplication = $application;
 
-        $this->assertGreaterThan(100, count($cachedApplication->getManager()->get('Cti\Di\Cache')->getData()));
+        $this->assertGreaterThan(50, count($cachedApplication->getManager()->get('Cti\Di\Cache')->getData()));
 
         unlink($cache);
-
-        $newApplication = Factory::create(__DIR__)->getApplication();
-        $this->assertLessThan(100, count($newApplication->getManager()->get('Cti\Di\Cache')->getData()));
-
-        $filesystem = new Filesystem();
-        $filesystem->dumpFile($cache, '<?php return array();');
+        $configuration = array(
+            'Cti\\Core\\Module\\Project' => array(
+                'path' => __DIR__,
+            ),
+            'Cti\\Core\\Module\\Cache' => array(
+                'enabled' => false,
+            ),
+        );
+        $newApplication = Factory::create($configuration)->getApplication();
+        $this->assertLessThan(50, count($newApplication->getManager()->get('Cti\Di\Cache')->getData()));
     }
 
     function testFailCreation()

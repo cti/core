@@ -46,7 +46,7 @@ class Project
      * @param string $string
      * @return string
      */
-    public function getPath($string)
+    public function getPath($string = '')
     {
 
         $args = func_get_args();

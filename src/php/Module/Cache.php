@@ -24,7 +24,7 @@ class Cache implements Bootstrap
     /**
      * @var bool
      */
-    public $enabled = false;
+    public $enabled = true;
 
     /**
      * bootstrap application
@@ -34,9 +34,10 @@ class Cache implements Bootstrap
     public function boot(Application $application)
     {
         if($this->enabled) {
-            if($this->exists('di')) {
-                $application->getManager()->get('Cti\\Di\\Cache')->setData($this->get('di'));
+            if(!$this->exists('di')) {
+                $this->generateDi();
             }
+            $application->getManager()->get('Cti\\Di\\Cache')->setData($this->get('di'));
         }
     }
 
@@ -119,8 +120,10 @@ class Cache implements Bootstrap
             $inspector->getClassProperties($class);
 
             foreach(Reflection::getReflectionClass($class)->getMethods() as $method) {
-                $inspector->getMethodArguments($class, $method->getName());
-                $inspector->getMethodRequiredCount($class, $method->getName());
+                if($method->getDeclaringClass()->getName() == $class) {
+                    $inspector->getMethodArguments($class, $method->getName());
+                    $inspector->getMethodRequiredCount($class, $method->getName());
+                }
             }
         }
 

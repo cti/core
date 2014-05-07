@@ -4,6 +4,7 @@ namespace Cti\Core\Command;
 
 use Build\Application;
 use Cti\Core\Application\Factory;
+use Cti\Core\Exception;
 use Cti\Di\Cache;
 use Cti\Di\Reflection;
 
@@ -49,11 +50,18 @@ class Deploy extends Command
         // clean up build
         $filesystem->remove($this->getApplication()->getProject()->getPath('build'));
 
-        // generate new application
-        Factory::create($this->getApplication()->getProject()->getPath(''))->getApplication();
+        // check cache module configuration
+        $configuration = $this->getApplication()->getManager()->getConfiguration();
+        $enabled = $configuration->get('Cti\\Core\\Module\\Cache', 'enabled', true);
+        if(!$enabled) {
+            throw new Exception("Module\\Cache should be enabled");
+        }
 
-        // generate cache files
-        $this->getApplication()->getCache()->generate();
+        // generate new application
+        $root = $this->getApplication()->getProject()->getPath();
+        Factory::create($root)->getApplication();
+
+        $output->writeln("Complete!");
     }
 
     /**
