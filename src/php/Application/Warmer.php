@@ -8,7 +8,7 @@ use Build\Application;
  * Interface Bootstrap
  * @package Cti\Core\Application
  */
-interface Warm
+interface Warmer
 {
     /**
      * warm application

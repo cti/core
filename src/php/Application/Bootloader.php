@@ -8,7 +8,7 @@ use Build\Application;
  * Interface Bootstrap
  * @package Cti\Core\Application
  */
-interface Bootstrap
+interface Bootloader
 {
     /**
      * bootstrap application

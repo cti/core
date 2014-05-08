@@ -3,13 +3,13 @@
 namespace Cti\Core\Module;
 
 use Build\Application;
-use Cti\Core\Application\Bootstrap;
-use Cti\Core\Application\Warm;
+use Cti\Core\Application\Bootloader;
+use Cti\Core\Application\Warmer;
 use Cti\Di\Cache;
 use Cti\Di\Reflection;
 use Symfony\Component\Finder\Finder;
 
-class Manager extends \Cti\Di\Manager implements Bootstrap, Warm
+class Manager extends \Cti\Di\Manager implements Bootloader, Warmer
 {
 
     /**

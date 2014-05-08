@@ -73,10 +73,10 @@ class Generator
                 }
 
                 if(!isset($methods[$alias])) {
-                    if(Reflection::getReflectionClass($class)->implementsInterface('Cti\\Core\\Application\\Bootstrap')) {
+                    if(Reflection::getReflectionClass($class)->implementsInterface('Cti\\Core\\Application\\Bootloader')) {
                         $bootstrap[] = $alias;
                     }
-                    if(Reflection::getReflectionClass($class)->implementsInterface('Cti\\Core\\Application\\Warm')) {
+                    if(Reflection::getReflectionClass($class)->implementsInterface('Cti\\Core\\Application\\Warmer')) {
                         $warm[] = $alias;
                     }
                     $methods[$alias] = $this->renderGetter($alias, $class);

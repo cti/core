@@ -3,7 +3,7 @@
 namespace Cti\Core\Module;
 
 use Build\Application;
-use Cti\Core\Application\Warm;
+use Cti\Core\Application\Warmer;
 use Cti\Core\Exception;
 use Symfony\Component\Finder\Finder;
 
@@ -11,7 +11,7 @@ use Symfony\Component\Finder\Finder;
  * Class Project
  * @package Cti\Core\Module
  */
-class Project implements Warm
+class Project implements Warmer
 {
     /**
      * @var string

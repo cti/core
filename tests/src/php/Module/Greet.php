@@ -3,9 +3,9 @@
 namespace Module;
 
 use Build\Application;
-use Cti\Core\Application\Bootstrap;
+use Cti\Core\Application\Bootloader;
 
-class Greet implements Bootstrap
+class Greet implements Bootloader
 {
     /**
      * @var string
