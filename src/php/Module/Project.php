@@ -46,8 +46,11 @@ class Project implements Warm
      */
     public function getClasses($namespace)
     {
-        if(isset($this->cache[$namespace])) {
-            return $this->cache[$namespace];
+        if(!isset($this->cache[__METHOD__])) {
+            $this->cache[__METHOD__] = array();
+        }
+        if(isset($this->cache[__METHOD__][$namespace])) {
+            return $this->cache[__METHOD__][$namespace];
         }
 
         if(!in_array($namespace, $this->getAvailableNamespaces())) {
@@ -64,7 +67,7 @@ class Project implements Warm
             }
         }
 
-        return $this->cache[$namespace] = $result;
+        return $this->cache[__METHOD__][$namespace] = $result;
     }
 
     /**
