@@ -4,6 +4,7 @@ namespace Cti\Core\Module;
 
 use Build\Application;
 use Cti\Core\Application\Warmer;
+use Cti\Core\Exception;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Finder\Finder;
 
@@ -50,7 +51,7 @@ class Fenom implements Warmer
      * @param string $template
      * @param array $data
      */
-    public function display($template, $data)
+    public function display($template, $data = array())
     {
         echo $this->render($template, $data);
     }
@@ -65,15 +66,16 @@ class Fenom implements Warmer
         $template = implode(DIRECTORY_SEPARATOR, explode(' ', $template)) . '.tpl';
         foreach($this->source as $index => $resource) {
             if(file_exists($resource . DIRECTORY_SEPARATOR . $template)) {
-                return $this->getFenom($index)->fetch($template, $data);
+                return $this->getEngine($index)->fetch($template, $data);
             }
         }
+        throw new Exception(sprintf("Template %s not found", $template));
     }
 
     /**
      * @return \Fenom
      */
-    private function getFenom($index)
+    private function getEngine($index)
     {
         if(!isset($this->instances[$index])) {
             $filesystem = new Filesystem();
@@ -97,7 +99,7 @@ class Fenom implements Warmer
         $compiled = array();
         foreach($this->source as $index => $source) {
 
-            $fenom = $this->getFenom($index);
+            $fenom = $this->getEngine($index);
             $start = strlen($source) + 1;
 
             $finder = new Finder();
