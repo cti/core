@@ -18,7 +18,7 @@ use Symfony\Component\Finder\Finder;
  * Class Deploy
  * @package Cti\Core\Command
  */
-class Deploy extends Command
+class Build extends Command
 {
     /**
      * @inject
@@ -32,7 +32,7 @@ class Deploy extends Command
     protected function configure()
     {
         $this
-            ->setName('deploy')
+            ->setName('build')
             ->setDescription("Generate application files");
     }
 

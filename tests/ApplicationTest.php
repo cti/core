@@ -73,7 +73,7 @@ class ApplicationTest extends PHPUnit_Framework_TestCase
         $application = Factory::create($config)->getApplication();
 
         $this->setExpectedException('Exception');
-        $application->getConsole()->execute('deploy');
+        $application->getConsole()->execute('build');
     }
 
     function testCaching()
@@ -81,7 +81,7 @@ class ApplicationTest extends PHPUnit_Framework_TestCase
         $application = Factory::create(__DIR__)->getApplication();
 
         $console = $application->getConsole();
-        $console->execute('deploy');
+        $console->execute('build');
 
         $this->assertFileExists($application->getProject()->getPath('build cache Cti Core Module Manager.php'));
         $this->assertFileExists($application->getProject()->getPath('build cache Cti Core Module Project.php'));
