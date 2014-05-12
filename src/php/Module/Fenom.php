@@ -87,12 +87,15 @@ class Fenom implements Warmer
     {
         $compiled = array();
         foreach($this->source as $index => $source) {
-            $finder = new Finder();
+
+            $fenom = $this->getFenom($index);
             $start = strlen($source) + 1;
+
+            $finder = new Finder();
             foreach($finder->files()->name('*.tpl')->in($source) as $file) {
                 $name = substr($file, $start);
                 if(!isset($compiled[$name])) {
-                    $this->getFenom($index)->compile($name);
+                    $fenom->compile($name);
                     $compiled[$name] = true;
                 }
             }
