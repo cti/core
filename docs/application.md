@@ -9,7 +9,7 @@ If your module needs to do some work to initialize application implement Bootstr
 - Warm  
 Implement Warm interface to do hard work (cache warm, code generation, etc..)
 
-# Generator.
+# Generator
 Generator use core and module properties to generate application class.  
 Let's write your own module and see how it should be registered. 
 
@@ -55,7 +55,7 @@ $burger = Factory::get($root)->getChief()->getBurger();
 Application use cti\di to instantiate classes.
 
 
-# Factory.
+# Factory
 By default, application is generating when destination file is not exists.  
 If you need to force generate, you can add generate property in your config:
 
