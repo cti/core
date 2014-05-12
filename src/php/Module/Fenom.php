@@ -49,6 +49,15 @@ class Fenom implements Warmer
     /**
      * @param string $template
      * @param array $data
+     */
+    public function display($template, $data)
+    {
+        echo $this->render($template, $data);
+    }
+
+    /**
+     * @param string $template
+     * @param array $data
      * @return string
      */
     public function render($template, $data = array())
