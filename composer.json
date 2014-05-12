@@ -16,7 +16,9 @@
     "require": {
         "symfony/console": "*",
         "symfony/finder": "*",
-        "cti/di": "*"
+        "fenom/fenom": "*",
+        "cti/di": "*",
+        "cti/direct": "*"
     },
     "require-dev": {
         "phpunit/phpunit": "4.0.*",

@@ -18,14 +18,7 @@ class Generator
      * core modules
      * @var array
      */
-    protected $core = array(
-        'Cti\\Core\\Module\\Cache',
-        'Cti\\Core\\Module\\Coffee',
-        'Cti\\Core\\Module\\Console',
-        'Cti\\Core\\Module\\Core',
-        'Cti\\Core\\Module\\Project',
-        'Cti\\Core\\Module\\Web',
-    );
+    protected $core = array();
 
     /**
      * project modules
@@ -64,7 +57,18 @@ class Generator
         $bootstrap = $warm = array('Manager');
         $methods = array('Manager' => $this->renderManager());
 
-        foreach(array($this->core, $this->modules) as $source) {
+        $core = $this->core;
+
+        if(!count($core)) {
+            $modules = scandir(dirname(__DIR__) . DIRECTORY_SEPARATOR . 'Module');
+            foreach($modules as $line) {
+                if(strpos($line, '.php')) {
+                    $core[] = 'Cti\\Core\\Module\\' . basename($line, '.php');
+                }
+            }
+        }
+
+        foreach(array($core, $this->modules) as $source) {
             foreach($source as $alias => $class) {
                 if(is_numeric($alias)) {
                     $alias = Reflection::getReflectionClass($class)->getShortName();
