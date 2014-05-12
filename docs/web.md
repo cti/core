@@ -49,6 +49,7 @@ class ExcelController
     function postUpload()
     {}
 }
+```
 
 # Parameters
 Web module uses cti/di, so you can inject any dependencies
@@ -78,3 +79,46 @@ return array(
 );
 ```
 Now all your routing and url generation will use this option.
+
+# Dynamic processing
+While parsing url web creates chain - it is array of slugs.  
+If no method found it can be passed to processChain method:
+
+```
+<?php
+
+class DefaultController
+{
+    /**
+     * any url goes here
+     */
+    function processChain($chain)
+    {
+        // your relative url is here
+        echo implode('/', $chain);
+    }
+}
+```
+Let's see when it's useful:
+
+```php
+<?php
+class BlogController
+{
+    function get()
+    {
+        // handle /blog url
+    }
+    
+    function processChain($chain)
+    {
+        $slug = $chain[0];
+        
+        if(is_numeric($slug)) {
+            // process /blog/:id request
+        } else {
+            // process /blog/:title request
+        }
+    }
+}
+```
