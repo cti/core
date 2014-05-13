@@ -7,6 +7,7 @@ use Cti\Core\Application\Warmer;
 use Cti\Core\Exception;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Finder\Finder;
+use Cti\Core\String;
 
 class Fenom implements Warmer
 {
@@ -80,13 +81,29 @@ class Fenom implements Warmer
         if(!isset($this->instances[$index])) {
             $filesystem = new Filesystem();
             $filesystem->mkdir($this->source[$index]);
-            $this->instances[$index] = \Fenom::factory(
+            $fenom = $this->instances[$index] = \Fenom::factory(
                 $this->source[$index],
                 $this->build,
                 \Fenom::AUTO_RELOAD
             );
+            $this->initEngine($fenom);
         }
         return $this->instances[$index];
+    }
+
+    /**
+     * Init Fenom engine with modifiers and functions
+     * @param $fenom
+     */
+    private function initEngine($fenom)
+    {
+        $fenom->addModifier('pluralize', function($string){
+            return String::pluralize($string);
+        });
+
+        $fenom->addModifier('camelcase', function($string){
+            return String::convertToCamelCase($string);
+        });
     }
 
     /**
