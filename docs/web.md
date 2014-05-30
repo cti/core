@@ -84,7 +84,7 @@ Now all your routing and url generation will use this option.
 While parsing url web creates chain - it is array of slugs.  
 If no method found it can be passed to processChain method:
 
-```
+```php
 <?php
 
 class DefaultController
