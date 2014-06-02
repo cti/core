@@ -89,9 +89,9 @@ class Factory
     {
         if (!isset($this->application)) {
             if ($this->generate || !file_exists($this->filename)) {
-                $this->manager->create('Cti\\Core\\Application\\Generator');
+                $this->manager->get('Cti\\Core\\Application\\Generator');
             }
-            $this->application = $this->manager->create('Build\\Application');
+            $this->application = $this->manager->get('Build\\Application');
         }
         return $this->application;
     }
