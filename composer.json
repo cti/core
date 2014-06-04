@@ -14,11 +14,12 @@
         }
     },
     "require": {
-        "symfony/console": "*",
-        "symfony/finder": "*",
         "fenom/fenom": "*",
+        "coffeescript/coffeescript" : "*",
         "cti/di": "*",
-        "cti/direct": "*"
+        "cti/direct": "*",
+        "symfony/console": "*",
+        "symfony/finder": "*"
     },
     "require-dev": {
         "phpunit/phpunit": "4.0.*",

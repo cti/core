@@ -2,6 +2,7 @@
 
 namespace Cti\Core\Module;
 
+use CoffeeScript\Compiler;
 use Cti\Core\Exception;
 use Symfony\Component\Filesystem\Filesystem;
 
@@ -35,23 +36,22 @@ class Coffee
         $filename = $this->project->getPath("resources coffee $script.coffee");
         $dependencies = $this->getDependencyList($filename);
 
+        $fs = new Filesystem;
+
         foreach(array_reverse($dependencies) as $coffee) {
+            $code = Compiler::compile(file_get_contents($coffee), array(
+                'filename' => $coffee,
+                'bare' => true,
+                'header' => false
+            ));
 
             $local = $this->getLocalPath($coffee);
-
             $local = dirname($local) . DIRECTORY_SEPARATOR . basename($local, 'coffee') .'js';
-            $javascript = $this->project->getPath(sprintf('build js %s', $local));
+            $fs->dumpFile($this->project->getPath(sprintf('build js %s', $local)), $code);
 
-            $out = dirname($javascript);
-            $command = "coffee -b -o $out -c $coffee";
-
-            $input = $output = array();
-            exec($command, $input, $output);
-
-            $result .= file_get_contents($javascript) . PHP_EOL;
+            $result .= $code . PHP_EOL;
         }
 
-        $fs = new Filesystem;
         $filename = $this->project->getPath("public js $script.js");
         $fs->dumpFile($filename, $result);
 
