@@ -94,8 +94,14 @@ class Coffee
         throw new Exception(sprintf('Invalid source search for %s', $filename));
     }
 
+    protected $hash = array();
+
     protected function getDependencyList($script)
     {
+        if(isset($this->hash[$script])) {
+            return array();
+        }
+        $this->hash[$script] = true;
         $result = array();
         if(!file_exists($script)) {
             throw new Exception(sprintf('File %s not found', $script));
