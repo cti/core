@@ -164,7 +164,7 @@ class Web
             }
 
 
-        } catch(Exception $e) {
+        } catch(\Exception $e) {
             if(!method_exists($controller, 'processException')) {
                 throw $e;
             }
