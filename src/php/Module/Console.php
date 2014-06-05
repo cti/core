@@ -66,6 +66,21 @@ class Console extends Application
     }
 
     /**
+     * check command existings
+     * @param $command
+     * @return boolean
+     */
+    function has($command)
+    {
+        try {
+             $this->find($command);
+             return true;
+        } catch(\Exception $e) {
+            return false;
+        }
+    }
+
+    /**
      * @return Manager
      */
     public function getManager()

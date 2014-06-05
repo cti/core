@@ -51,6 +51,11 @@ class Build extends Command
         $filesystem->remove($this->getApplication()->getProject()->getPath('build'));
         $filesystem->mkdir($this->getApplication()->getProject()->getPath('build php'));
 
+        $console = $this->getApplication()->getConsole();
+        if($console->has('generate:files')) {
+            $console->execute('generate:files');
+        }
+
         // check cache module configuration
         $configuration = $this->getApplication()->getManager()->getConfiguration();
         $enabled = $configuration->get('Cti\\Core\\Module\\Cache', 'enabled', true);
