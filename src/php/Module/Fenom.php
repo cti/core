@@ -79,11 +79,17 @@ class Fenom implements Warmer
     private function getEngine($index)
     {
         if(!isset($this->instances[$index])) {
+
+            $source = $this->source[$index];
+            $build = $this->build . DIRECTORY_SEPARATOR . md5($this->source[$index]);
+
             $filesystem = new Filesystem();
-            $filesystem->mkdir($this->source[$index]);
+            $filesystem->mkdir($source);
+            $filesystem->mkdir($build);
+
             $fenom = $this->instances[$index] = \Fenom::factory(
-                $this->source[$index],
-                $this->build,
+                $source,
+                $build,
                 \Fenom::AUTO_RELOAD
             );
             $this->initEngine($fenom);
