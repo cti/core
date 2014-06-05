@@ -61,7 +61,7 @@ class Web
                 throw new Exception('Base url not ends with /');
             }
             if(strpos($_SERVER['REQUEST_URI'], $this->base) !== 0) {
-                throw new Exception('Base url (%s) is incorrect');
+                throw new Exception(sprintf('Base url (%s) is incorrect', $this->base));
             }
         }
 
