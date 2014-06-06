@@ -39,15 +39,22 @@ class Coffee
         $fs = new Filesystem;
 
         foreach(array_reverse($dependencies) as $coffee) {
-            $code = Compiler::compile(file_get_contents($coffee), array(
-                'filename' => $coffee,
-                'bare' => true,
-                'header' => false
-            ));
 
             $local = $this->getLocalPath($coffee);
             $local = dirname($local) . DIRECTORY_SEPARATOR . basename($local, 'coffee') .'js';
-            $fs->dumpFile($this->project->getPath(sprintf('build js %s', $local)), $code);
+            $javascript = $this->project->getPath(sprintf('build js %s', $local));
+
+            if(!file_exists($javascript) || filemtime($coffee) >= filemtime($javascript)) {
+                $code = Compiler::compile(file_get_contents($coffee), array(
+                    'filename' => $coffee,
+                    'bare' => true,
+                    'header' => false
+                ));
+                $fs->dumpFile($javascript, $code);
+
+            } else {
+                $code = file_get_contents($javascript);
+            }
 
             $result .= $code . PHP_EOL;
         }
