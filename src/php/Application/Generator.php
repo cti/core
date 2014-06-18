@@ -54,7 +54,7 @@ class Generator
     {
         $contents = $this->renderHeader();
 
-        $bootstrap = $warm = array('Manager');
+        $bootstrap = $warm = array('Cti\Core\Module\Manager' => 'Manager');
         $methods = array('Manager' => $this->renderManager());
 
         $core = $this->core;
@@ -81,7 +81,7 @@ class Generator
                         $bootstrap[] = $alias;
                     }
                     if(Reflection::getReflectionClass($class)->implementsInterface('Cti\\Core\\Application\\Warmer')) {
-                        $warm[] = $alias;
+                        $warm[$class] = $alias;
                     }
                     $methods[$alias] = $this->renderGetter($alias, $class);
                 }
@@ -89,6 +89,7 @@ class Generator
         }
         $methods['-2'] = $this->renderBootstrap($bootstrap);
 
+        $warm = $this->processDependencies($warm);
         $methods['-1'] = $this->renderWarm($warm);
 
         ksort($methods);
@@ -96,6 +97,62 @@ class Generator
         $contents .= PHP_EOL . '}';
 
         return $contents;
+    }
+
+    /**
+     * sort warm by dependency
+     * @param array $warm
+     * @return array
+     */
+    function processDependencies($warm)
+    {
+        $result = array_keys($warm);
+        $dependencies = array();
+        foreach (array_keys($warm) as $index => $class) {
+            if($class == 'Cti\Core\Module\Manager') {
+                $last = $index;
+            } else {
+                $doc = Reflection::getReflectionClass($class)->getDocComment();
+                if($doc) {
+                    foreach(explode(PHP_EOL, $doc) as $line) {
+                        if(stristr($line, '@dependsOn ')) {
+                            list($f, $dependency) = explode('@dependsOn ', $line);
+                            $dependencies[$class] = trim($dependency);
+                        }
+                    }
+                }
+            }
+        }
+        if(isset($last)) {
+            $v = $result[$last];
+            unset($result[$last]);
+            $result[] = $v;
+        }
+        $needSort = count($dependencies) > 0;
+        $iterations = 0;
+        while($needSort) {
+            if($iterations ++ > 10) {
+                throw new Exception("Sort failed");
+            }
+            $needSort = false;
+            foreach ($dependencies as $class => $dependency) {
+                $cIndex = array_search($class, $result);
+                $dIndex = array_search($dependency, $result);
+                if($dIndex > $cIndex) {
+                    // swap keys
+                    $result[$dIndex] = $class;
+                    $result[$cIndex] = $dependency;
+                    $result = array_values($result);
+                    $needSort = true;
+                    break;
+                }
+            }
+        }
+        $aliasList = array();
+        foreach($result as $class) {
+            $aliasList[] = $warm[$class];
+        }
+        return $aliasList;
     }
 
 

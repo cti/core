@@ -45,16 +45,11 @@ class Build extends Command
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $filesystem = new Filesystem();
 
-        // clean up build
+        // clean up 
+        $filesystem = new Filesystem();
         $filesystem->remove($this->getApplication()->getProject()->getPath('build'));
         $filesystem->mkdir($this->getApplication()->getProject()->getPath('build php'));
-
-        $console = $this->getApplication()->getConsole();
-        if($console->has('generate:files')) {
-            $console->execute('generate:files');
-        }
 
         // check cache module configuration
         $configuration = $this->getApplication()->getManager()->getConfiguration();
@@ -63,7 +58,11 @@ class Build extends Command
             throw new Exception("Module\\Cache should be enabled");
         }
 
-        $this->getApplication()->warm();
+        // create and warm application
+        $root = $this->getApplication()->getProject()->getPath();
+        Factory::create($root)
+            ->getApplication()
+            ->warm();
     }
 
     /**
