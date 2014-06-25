@@ -215,7 +215,7 @@ METHOD;
         foreach($bootstrap as $alias) {
             $commands[] .= '$this->get' . $alias . '()->warm($this);';
         }
-        $commands = implode(PHP_EOL . '        ', $commands);
+        $commands = implode(PHP_EOL . '            ', $commands);
 
         return <<<METHOD
     /**
@@ -223,7 +223,12 @@ METHOD;
      */
     public function warm()
     {
-        $commands
+        try {
+            $commands
+        } catch(\Exception \$e) {
+            echo 'ERROR! ' . \$e->getMessage() . PHP_EOL;
+            echo \$e->getTraceAsString();
+        }
     }
 METHOD;
     }
