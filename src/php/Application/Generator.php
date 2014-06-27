@@ -213,7 +213,10 @@ METHOD;
     {
         $commands = array();
         foreach($bootstrap as $alias) {
+            $commands[] .= '$start = microtime(true);';
+            $commands[] .= 'echo "Warm ' . $alias . '..." . PHP_EOL;';
             $commands[] .= '$this->get' . $alias . '()->warm($this);';
+            $commands[] .= 'echo "- complete in " . round(1000 * (microtime(true) - $start)) . "ms" . PHP_EOL . PHP_EOL;';
         }
         $commands = implode(PHP_EOL . '            ', $commands);
 
@@ -224,6 +227,8 @@ METHOD;
     public function warm()
     {
         try {
+            echo PHP_EOL . 'Warming application!' . PHP_EOL. PHP_EOL;
+
             $commands
         } catch(\Exception \$e) {
             echo 'ERROR! ' . \$e->getMessage() . PHP_EOL;

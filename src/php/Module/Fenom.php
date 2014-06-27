@@ -126,13 +126,17 @@ class Fenom implements Warmer
             $start = strlen($source) + 1;
 
             $finder = new Finder();
+            $cnt = 0;
             foreach($finder->files()->name('*.tpl')->in($source) as $file) {
+                $cnt++;
                 $name = substr($file, $start);
                 if(!isset($compiled[$name])) {
                     $fenom->compile($name);
                     $compiled[$name] = true;
                 }
             }
+
+            echo "- found $cnt template(s) in $source" . PHP_EOL;
         }
     }
 }
