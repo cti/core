@@ -167,6 +167,8 @@ class Generator
 namespace Build;
 
 use Cti\\Core\\Module\\Manager;
+use Cti\\Core\\String;
+use Symfony\\Component\\Stopwatch\\Stopwatch;
 
 class Application
 {
@@ -213,10 +215,16 @@ METHOD;
     {
         $commands = array();
         foreach($bootstrap as $alias) {
-            $commands[] .= '$start = microtime(true);';
-            $commands[] .= 'echo "Warm ' . $alias . '..." . PHP_EOL;';
-            $commands[] .= '$this->get' . $alias . '()->warm($this);';
-            $commands[] .= 'echo "- complete in " . round(1000 * (microtime(true) - $start)) . "ms" . PHP_EOL . PHP_EOL;';
+            $commands[] = 'echo "Warm ' . $alias . '..." . PHP_EOL;';
+            $commands[] = '$stopwatch->start("' . $alias . '");';
+            $commands[] = '';
+            $commands[] = '$this->get' . $alias . '()->warm($this);';
+            $commands[] = '';
+            $commands[] = '$event = $stopwatch->stop("' . $alias . '");';
+            $commands[] = 'echo "- complete in " . String::formatMilliseconds($event->getDuration());';
+            $commands[] = 'echo " using " . String::formatBytes($event->getMemory()) . PHP_EOL . PHP_EOL;';
+            $commands[] = '';
+            $commands[] = '';
         }
         $commands = implode(PHP_EOL . '            ', $commands);
 
@@ -227,9 +235,17 @@ METHOD;
     public function warm()
     {
         try {
+            \$stopwatch = new Stopwatch();
+
             echo PHP_EOL . 'Warming application!' . PHP_EOL. PHP_EOL;
+            \$stopwatch->start('Application');
 
             $commands
+            \$event = \$stopwatch->stop("Application");
+            echo PHP_EOL;
+            echo "All tasks processed in " . String::formatMilliseconds(\$event->getDuration());
+            echo " using " . String::formatBytes(\$event->getMemory()) . PHP_EOL . PHP_EOL;
+            
         } catch(\Exception \$e) {
             echo 'ERROR! ' . \$e->getMessage() . PHP_EOL;
             echo \$e->getTraceAsString();

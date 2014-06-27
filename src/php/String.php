@@ -78,4 +78,16 @@ class String
         $suffixes = array('', 'k', 'M', 'G', 'T');   
         return round(pow(1024, $base - floor($base)), $precision) . $suffixes[floor($base)];
     }
+
+    public static function formatMilliseconds($ms)
+    {
+        if($ms < 1000) {
+            return $ms . 'ms';
+        }
+        if($ms < 10000) {
+            return (round($ms/100)/10) . 'sec';
+        }
+        else return round($ms/1000) . 'sec';
+
+    }
 }
