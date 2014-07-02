@@ -19,7 +19,8 @@
         "cti/di": "*",
         "cti/direct": "*",
         "symfony/console": "*",
-        "symfony/finder": "*"
+        "symfony/finder": "*",
+        "symfony/stopwatch": "*"
     },
     "require-dev": {
         "phpunit/phpunit": "4.0.*",
